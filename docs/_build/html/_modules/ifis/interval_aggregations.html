@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ifis.interval_aggregations &mdash; IFIS library 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            IFIS library
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">IFIS (<em>Interval-Valued Inference System based on Simpful</em>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ifis</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">IFIS library</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ifis.interval_aggregations</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ifis.interval_aggregations</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">simpful</span> <span class="k">as</span> <span class="nn">sf</span>
+<span class="kn">from</span> <span class="nn">simpful</span> <span class="kn">import</span> <span class="n">Triangular_MF</span><span class="p">,</span> <span class="n">Trapezoidal_MF</span>
+<span class="kn">from</span> <span class="nn">.interval_fuzzy_sets</span> <span class="kn">import</span> <span class="n">IntervalFuzzySet</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module with various implementations of aggregation functions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="aMeanPower">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aMeanPower">[docs]</a>
+<span class="k">def</span> <span class="nf">aMeanPower</span><span class="p">(</span><span class="n">memberships</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation &#39;MeanPower&#39;</span>
+<span class="sd">    This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :return: lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">memberships</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)]</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">memberships2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([[[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">memberships</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                                         <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">memberships</span><span class="p">[:</span><span class="mi">2</span><span class="p">])[:,</span> <span class="mi">1</span><span class="p">]])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)]],</span>
+                                       <span class="n">memberships</span><span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">aMeanPower</span><span class="p">(</span><span class="n">memberships2</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="aMeanMax">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aMeanMax">[docs]</a>
+<span class="k">def</span> <span class="nf">aMeanMax</span><span class="p">(</span><span class="n">memberships</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation &#39;MeanMax&#39;</span>
+<span class="sd">    This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :return: list which contains lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">memberships</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span></div>
+
+
+
+<div class="viewcode-block" id="aProdMean">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aProdMean">[docs]</a>
+<span class="k">def</span> <span class="nf">aProdMean</span><span class="p">(</span><span class="n">memberships</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation &#39;ProdMean&#39;</span>
+<span class="sd">    This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :return: list which contains lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">memberships</span><span class="p">)]</span></div>
+
+
+
+<div class="viewcode-block" id="aMinMax">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aMinMax">[docs]</a>
+<span class="k">def</span> <span class="nf">aMinMax</span><span class="p">(</span><span class="n">memberships</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation &#39;MinMax&#39;</span>
+<span class="sd">    This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :return: list which contains lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span></div>
+
+
+
+<div class="viewcode-block" id="aMax">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aMax">[docs]</a>
+<span class="k">def</span> <span class="nf">aMax</span><span class="p">(</span><span class="n">memberships</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation &#39;Max&#39;</span>
+<span class="sd">    This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</span>
+<span class="sd">    and comparability relations: possible and necessary</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :return: list which contains lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span></div>
+
+
+
+<div class="viewcode-block" id="aMin">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aMin">[docs]</a>
+<span class="k">def</span> <span class="nf">aMin</span><span class="p">(</span><span class="n">memberships</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation &#39;Min&#39;</span>
+<span class="sd">    This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</span>
+<span class="sd">    and comparability relations: possible and necessary</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :return: list which contains lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span></div>
+
+
+
+<div class="viewcode-block" id="aGMean">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aGMean">[docs]</a>
+<span class="k">def</span> <span class="nf">aGMean</span><span class="p">(</span><span class="n">memberships</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation &#39;GeometricMean&#39;</span>
+<span class="sd">    This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</span>
+<span class="sd">    and comparability relations: possible and necessary</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :return: list which contains lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">memberships</span><span class="p">]),</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()))</span></div>
+
+
+
+<div class="viewcode-block" id="aAlpha">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aAlpha">[docs]</a>
+<span class="k">def</span> <span class="nf">aAlpha</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation alpha</span>
+<span class="sd">    If param alpha equals 0.5 we get Mean aggregation</span>
+<span class="sd">    This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :param alpha: parameter to builds aggregation, default to 0.5</span>
+<span class="sd">        :type alpha: float</span>
+<span class="sd">        :return: list which contains lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">alpha</span> <span class="o">*</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">others</span> <span class="o">=</span> <span class="n">aAlpha</span><span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):],</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">others</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">alpha</span> <span class="o">*</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">others</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span></div>
+
+
+
+<div class="viewcode-block" id="aW">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aW">[docs]</a>
+<span class="k">def</span> <span class="nf">aW</span><span class="p">(</span><span class="n">memberships</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation &#39;W&#39;</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :return: list which contains lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">s1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">s2</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">s3</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">s4</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">s5</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()):</span>
+            <span class="n">s1</span> <span class="o">+=</span> <span class="n">memberships</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">s4</span> <span class="o">+=</span> <span class="n">memberships</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">s2</span> <span class="o">+=</span> <span class="n">memberships</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">memberships</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">s5</span> <span class="o">+=</span> <span class="n">memberships</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">memberships</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">s3</span> <span class="o">+=</span> <span class="n">memberships</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">memberships</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">s1</span> <span class="o">+</span> <span class="n">s2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">s3</span> <span class="o">+</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">())</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">s4</span> <span class="o">+</span> <span class="n">s5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">s3</span> <span class="o">+</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">())</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="aA1">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aA1">[docs]</a>
+<span class="k">def</span> <span class="nf">aA1</span><span class="p">(</span><span class="n">memberships</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation &#39;A1&#39;</span>
+<span class="sd">    This aggregation respect comparability relation: possible</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :return: list which contains lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">ones</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">ones</span> <span class="ow">and</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">ones</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">ones</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">ones</span> <span class="ow">and</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">ones</span><span class="p">:</span>
+            <span class="n">memberships</span><span class="o">.</span><span class="fm">__delitem__</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">aA1</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">memberships</span> <span class="o">=</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">aA1</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="aA2">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aA2">[docs]</a>
+<span class="k">def</span> <span class="nf">aA2</span><span class="p">(</span><span class="n">memberships</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation &#39;A2&#39;</span>
+<span class="sd">    This aggregation respect comparability relation: possible</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :return: list which contains lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">ones</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">ones</span> <span class="ow">and</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">ones</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">ones</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">ones</span> <span class="ow">and</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">ones</span><span class="p">:</span>
+            <span class="n">memberships</span><span class="o">.</span><span class="fm">__delitem__</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">aA2</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">memberships</span> <span class="o">=</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">aA2</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="aA3">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aA3">[docs]</a>
+<span class="k">def</span> <span class="nf">aA3</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">inside_aggregation</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation &#39;A3&#39;</span>
+<span class="sd">    This aggregation respect comparability relation: possible</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :param inside_aggregation: aggregation inside this aggregation function, able to use aggregations are</span>
+<span class="sd">            geometric mean(g) and power mean(p), default to &#39;g&#39;(geometric mean)</span>
+<span class="sd">        :type inside_aggregation: str</span>
+<span class="sd">        :return: list which contains lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">ones</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">ones</span> <span class="ow">and</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">ones</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">inside_aggregation</span> <span class="o">==</span> <span class="s1">&#39;g&#39;</span><span class="p">:</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">memberships</span><span class="p">]),</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">())</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">memberships</span><span class="p">])</span> <span class="o">/</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">(),</span>
+                    <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()))</span>
+            <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="aA4">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.aA4">[docs]</a>
+<span class="k">def</span> <span class="nf">aA4</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">inside_aggregation</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to aggregate memberships of each linguistic variable terms by aggregation &#39;A3&#39;</span>
+<span class="sd">    This aggregation respect comparability relation: possible</span>
+<span class="sd">        :param memberships: list memberships of each linguistic variable terms</span>
+<span class="sd">        :type memberships: list</span>
+<span class="sd">        :param inside_aggregation: aggregation inside this aggregation function, able to use aggregations are</span>
+<span class="sd">            geometric mean(g) and power mean(p), default to &#39;g&#39;(geometric mean)</span>
+<span class="sd">        :type inside_aggregation: str</span>
+<span class="sd">        :return: list which contains lower and upper bound of interval after aggregation</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: You can aggregate 2 or more intervals.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">zeros</span> <span class="ow">and</span> <span class="n">memberships</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">zeros</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">inside_aggregation</span> <span class="o">==</span> <span class="s1">&#39;g&#39;</span><span class="p">:</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">memberships</span><span class="p">]),</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">())</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">memberships</span><span class="p">])</span> <span class="o">/</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">(),</span>
+                    <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">memberships</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()))</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="IntervalFuzzyAggregator">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.IntervalFuzzyAggregator">[docs]</a>
+<span class="k">class</span> <span class="nc">IntervalFuzzyAggregator</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">FuzzyAggregator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a new interval fuzzy aggregation object based on the FuzzyAggregator object from the Simpful library.</span>
+<span class="sd">    Aggregations available: A_Prod, A_MeanPower, A_Mean.</span>
+<span class="sd">        :param verbose: toggles verbose mode, default to FALSE</span>
+<span class="sd">        :type verbose: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IntervalFuzzyAggregator.add_variables">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.IntervalFuzzyAggregator.add_variables">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds variables and their IVFS to perform fuzzy aggregation.</span>
+<span class="sd">            :param args: &#39;&#39;ifis.interval_fuzzy_sets.IntervalFuzzySet&#39;&#39; objects, whose &#39;term&#39; argument is the name of</span>
+<span class="sd">                the variable.</span>
+<span class="sd">            :type args: IVFS objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">IntervalFuzzySet</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">_term</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;35m * IVFS:&quot;</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">_term</span><span class="p">,</span> <span class="p">(</span>
+                    <span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">_points</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">_points_end</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span> <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="o">==</span> <span class="s2">&quot;pointbased&quot;</span> <span class="k">else</span> <span class="n">v</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;ERROR: please give as arguments only objects of interval fuzzy sets.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;38m&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IntervalFuzzyAggregator.set_variable">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.IntervalFuzzyAggregator.set_variable">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the interval value of a variable to be aggregated.</span>
+<span class="sd">            :param name: name of the variables to be set</span>
+<span class="sd">            :type name: str</span>
+<span class="sd">            :param value: interval value to be set</span>
+<span class="sd">            :type value: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; * Variable </span><span class="si">%s</span><span class="s2"> has value </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;ERROR: value for &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; is not integer or float: &quot;</span> <span class="o">+</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IntervalFuzzyAggregator.aggregate">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_aggregations.IntervalFuzzyAggregator.aggregate">[docs]</a>
+    <span class="k">def</span> <span class="nf">aggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aggregation_fun</span><span class="o">=</span><span class="s2">&quot;product&quot;</span><span class="p">,</span> <span class="n">aggregation_param</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The method aggregates the terms of linguistic variables according to their affiliation and membership functions</span>
+<span class="sd">            :param aggregation_fun: name of the aggregation we want to use (A_MeanPower, A_GMean, A_MeanMax, A_ProdMean,</span>
+<span class="sd">                A_MinMax, A_Min, A_Max, A_W, A_1, A_2, A_3, A_4, A_Alpha, A_Mean  are available)</span>
+<span class="sd">            :type aggregation_fun: str</span>
+<span class="sd">            :param aggregation_param: an optional parameter that is used in a specific aggregation that contains another</span>
+<span class="sd">                aggregation inside</span>
+<span class="sd">            :type aggregation_param: str, int</span>
+<span class="sd">            :return:</span>
+<span class="sd">            :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># In development</span>
+
+        <span class="k">if</span> <span class="n">variables</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; * Variables:&quot;</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">variables</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;ERROR: the specified list of variables to aggregate contains two or more repetitions, Interrupt.&quot;</span><span class="p">)</span>
+
+        <span class="n">memberships</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; * name = value: </span><span class="si">%s</span><span class="s2"> = </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; * result&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; * Type of IVFS:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_type</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="s2">&quot;_funpointer_end&quot;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer</span><span class="p">,</span> <span class="n">Triangular_MF</span><span class="p">):</span>
+                        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer</span><span class="o">.</span><span class="n">_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer</span><span class="o">.</span><span class="n">_b</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer</span><span class="o">.</span><span class="n">_c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer_end</span><span class="o">.</span><span class="n">_a</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer_end</span><span class="o">.</span><span class="n">_b</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer_end</span><span class="o">.</span><span class="n">_c</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer</span><span class="p">,</span> <span class="n">Trapezoidal_MF</span><span class="p">):</span>
+                        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer</span><span class="o">.</span><span class="n">_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer</span><span class="o">.</span><span class="n">_b</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer</span><span class="o">.</span><span class="n">_c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer</span><span class="o">.</span><span class="n">_d</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer_end</span><span class="o">.</span><span class="n">_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer_end</span><span class="o">.</span><span class="n">_b</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer_end</span><span class="o">.</span><span class="n">_c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_funpointer</span><span class="o">.</span><span class="n">_d</span><span class="p">])</span>
+                        <span class="c1"># TODO others functions</span>
+                    <span class="n">mi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+                    <span class="n">ma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">mi</span><span class="p">,</span> <span class="n">ma</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+                    <span class="c1"># print(type(x), x.astype(float))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_points</span><span class="p">)))</span>
+                    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">_points_end</span><span class="p">)))</span>
+                    <span class="c1"># sample = np.array([[0.1, 0.3], [0.5, 0.7], [0.4, 1], [0, 1], [0, .4]])</span>
+                    <span class="c1"># x = np.array(range(len(sample)))</span>
+                    <span class="c1"># print(&quot;\033[2;34m This text is Bright Green  \n&quot;)</span>
+                    <span class="c1"># print(Fore.YELLOW + &#39; &#39;)</span>
+                    <span class="c1"># print(type(self._variables[v]))</span>
+                    <span class="n">lower_ends</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span> <span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="n">a</span><span class="p">]</span>
+                    <span class="n">top_ends</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">xx</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="n">b</span><span class="p">]</span>
+                    <span class="c1"># print(a, lower_ends, &quot;\n&quot;, b, top_ends)</span>
+                    <span class="c1"># print(tabulate(lower_ends))</span>
+                    <span class="c1"># print(Fore.RESET + &quot; &quot;)</span>
+
+                    <span class="c1"># print(&quot;\t&quot;, type(result), self._variables[v])</span>
+                    <span class="c1"># print(&quot;\t&quot;, result)</span>
+                <span class="n">memberships</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;ERROR: term &quot;</span> <span class="o">+</span> <span class="n">v</span> <span class="o">+</span> <span class="s2">&quot; is not defined.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; * Aggregation of the following values:&quot;</span><span class="p">,</span> <span class="n">memberships</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">aggregation_fun</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; * Aggregation function:&quot;</span><span class="p">,</span> <span class="n">aggregation_fun</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">aggregation_param</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; * Aggregation function:&quot;</span><span class="p">,</span> <span class="n">aggregation_fun</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; * Aggregation function: </span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">aggregation_fun</span><span class="p">,</span> <span class="n">aggregation_param</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">aggregation_fun</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">aggregation_fun</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_Prod&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_MeanPower&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aMeanPower</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_GMean&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aGMean</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_MeanMax&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aMeanMax</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_ProdMean&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aProdMean</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_MinMax&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aMinMax</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_Min&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aMin</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_Max&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aMax</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_W&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aW</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_1&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aA1</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_2&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aA2</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_3&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aA3</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">aggregation_param</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_4&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aA4</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">aggregation_param</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_Alpha&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">aAlpha</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">aggregation_param</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">aggregation_fun</span> <span class="o">==</span> <span class="s2">&quot;A_Mean&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">memberships</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">memberships</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;ERROR: Please provide a pointer to a callable function or the name of an implemented aggregate function.&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># Creating an Interval Fuzzy Aggregator object and toggling verbose mode</span>
+    <span class="n">ivA</span> <span class="o">=</span> <span class="n">IntervalFuzzyAggregator</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Defining several interval fuzzy sets for variables and setting their names</span>
+    <span class="n">IVFS1</span> <span class="o">=</span> <span class="n">IntervalFuzzySet</span><span class="p">(</span><span class="n">function_start</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+                             <span class="n">function_end</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">6</span><span class="p">),</span>
+                             <span class="n">term</span><span class="o">=</span><span class="s1">&#39;test1&#39;</span><span class="p">)</span>
+    <span class="n">IVFS2</span> <span class="o">=</span> <span class="n">IntervalFuzzySet</span><span class="p">(</span><span class="n">function_start</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+                             <span class="n">function_end</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+                             <span class="n">term</span><span class="o">=</span><span class="s1">&#39;test2&#39;</span><span class="p">)</span>
+    <span class="n">IVFS3</span> <span class="o">=</span> <span class="n">IntervalFuzzySet</span><span class="p">(</span><span class="n">function_start</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+                             <span class="n">function_end</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span>
+                             <span class="n">term</span><span class="o">=</span><span class="s1">&#39;test3&#39;</span><span class="p">)</span>
+    <span class="n">IVFS4</span> <span class="o">=</span> <span class="n">IntervalFuzzySet</span><span class="p">(</span><span class="n">function_start</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+                             <span class="n">function_end</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">6</span><span class="p">),</span>
+                             <span class="n">term</span><span class="o">=</span><span class="s1">&#39;test4&#39;</span><span class="p">)</span>
+    <span class="n">IVFS5</span> <span class="o">=</span> <span class="n">IntervalFuzzySet</span><span class="p">(</span><span class="n">function_start</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">12</span><span class="p">),</span>
+                             <span class="n">function_end</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">12</span><span class="p">),</span>
+                             <span class="n">term</span><span class="o">=</span><span class="s1">&#39;test5&#39;</span><span class="p">)</span>
+    <span class="n">IVFS6</span> <span class="o">=</span> <span class="n">IntervalFuzzySet</span><span class="p">(</span><span class="n">function_start</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">14</span><span class="p">),</span>
+                             <span class="n">function_end</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">14</span><span class="p">),</span>
+                             <span class="n">term</span><span class="o">=</span><span class="s1">&#39;test6&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Adding interval fuzzy set objects to the Interval Fuzzy Aggregator</span>
+    <span class="n">ivA</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">IVFS1</span><span class="p">,</span> <span class="n">IVFS2</span><span class="p">,</span> <span class="n">IVFS3</span><span class="p">,</span> <span class="n">IVFS4</span><span class="p">,</span> <span class="n">IVFS5</span><span class="p">,</span> <span class="n">IVFS6</span><span class="p">)</span>
+
+    <span class="c1"># Set numeric variable names</span>
+    <span class="n">ivA</span><span class="o">.</span><span class="n">set_variable</span><span class="p">(</span><span class="s2">&quot;test1&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">ivA</span><span class="o">.</span><span class="n">set_variable</span><span class="p">(</span><span class="s2">&quot;test2&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">ivA</span><span class="o">.</span><span class="n">set_variable</span><span class="p">(</span><span class="s2">&quot;test3&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">ivA</span><span class="o">.</span><span class="n">set_variable</span><span class="p">(</span><span class="s2">&quot;test4&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">ivA</span><span class="o">.</span><span class="n">set_variable</span><span class="p">(</span><span class="s2">&quot;test5&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="n">ivA</span><span class="o">.</span><span class="n">set_variable</span><span class="p">(</span><span class="s2">&quot;test6&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+    <span class="c1"># Execution of aggregation.</span>
+    <span class="c1"># Aggregations available: A_Prod, A_MeanPower, A_Mean, A_GMean, A_MeanMax, A_ProdMean, A_MinMax, A_Min, A_Max, A_Alpha, A_W, A_1, A_2, A_3, A_4.</span>
+    <span class="c1"># It accepts the name of the aggregation function and any aggregation parameters.</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">ivA</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span><span class="s2">&quot;test1&quot;</span><span class="p">,</span> <span class="s2">&quot;test2&quot;</span><span class="p">],</span> <span class="n">aggregation_fun</span><span class="o">=</span><span class="s2">&quot;A_Mean&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;34mResult:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;38m&quot;</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">ivA</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span><span class="s2">&quot;test1&quot;</span><span class="p">,</span> <span class="s2">&quot;test2&quot;</span><span class="p">],</span> <span class="n">aggregation_fun</span><span class="o">=</span><span class="s2">&quot;A_4&quot;</span><span class="p">,</span> <span class="n">aggregation_param</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;34mResult:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;38m&quot;</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">ivA</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span><span class="s2">&quot;test5&quot;</span><span class="p">,</span> <span class="s2">&quot;test6&quot;</span><span class="p">],</span> <span class="n">aggregation_fun</span><span class="o">=</span><span class="s2">&quot;A_4&quot;</span><span class="p">,</span> <span class="n">aggregation_param</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;34mResult:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;38m&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Aggregation of three intervals</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">ivA</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span><span class="s2">&quot;test1&quot;</span><span class="p">,</span> <span class="s2">&quot;test2&quot;</span><span class="p">,</span> <span class="s2">&quot;test3&quot;</span><span class="p">],</span> <span class="n">aggregation_fun</span><span class="o">=</span><span class="s2">&quot;A_MeanPower&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;34mResult:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;38m&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Agregation MeanPower</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">ivA</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span><span class="s2">&quot;test1&quot;</span><span class="p">,</span> <span class="s2">&quot;test2&quot;</span><span class="p">,</span> <span class="s2">&quot;test3&quot;</span><span class="p">,</span> <span class="s2">&quot;test4&quot;</span><span class="p">],</span> <span class="n">aggregation_fun</span><span class="o">=</span><span class="s2">&quot;A_4&quot;</span><span class="p">,</span> <span class="n">aggregation_param</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;34mResult:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;38m&quot;</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">ivA</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span><span class="s2">&quot;test5&quot;</span><span class="p">,</span> <span class="s2">&quot;test6&quot;</span><span class="p">,</span> <span class="s2">&quot;test3&quot;</span><span class="p">,</span> <span class="s2">&quot;test4&quot;</span><span class="p">],</span> <span class="n">aggregation_fun</span><span class="o">=</span><span class="s2">&quot;A_4&quot;</span><span class="p">,</span> <span class="n">aggregation_param</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;34mResult:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2;38m&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Piotr Grochowalski, Dawid Kosior, Dorota Gil, Wojciech Kozioł, Barbara Pękala, Krzysztof Dyczkowski, Uzay Kaymak, Caro Fuchs, Marco S. Nobile.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+   
+  <div id="other-versions-div" class="rst-versions" data-toggle="rst-versions" role="note" aria-label="Versions" style="visibility: hidden">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Other Versions</span>
+      
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl id="other-versions-dl"/>
+    </div>
+  </div>
+  <script>
+    function addVersion(name) {
+      var dd = document.createElement("dd");
+      var a = document.createElement("a");
+      a.href = "../../../" + name;
+      a.innerText = name;
+      dd.appendChild(a);
+      document.getElementById('other-versions-dl').appendChild(dd);
+    }
+    // Get versions.txt and add a version for each line
+    fetch("../../../versions.txt").then(response => {
+      if (response.ok) {
+        document.getElementById('other-versions-div').style.visibility = "visible";
+        return response.text().then(text => text.split(/\r?\n/).forEach(addVersion))
+      }
+    });
+  </script>
+
+
+</body>
+</html>

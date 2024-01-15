@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFIS (Interval-Valued Inference System based on Simpful) &mdash; IFIS library 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ifis" href="modules.html" />
+    <link rel="prev" title="Welcome to IFIS library’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            IFIS library
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">IFIS (<em>Interval-Valued Inference System based on Simpful</em>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#citing-ifis">Citing IFIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#illustrative-examples">Illustrative examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tipping-problem">Tipping problem</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#further-info">Further info</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">ifis</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">IFIS library</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">IFIS (<em>Interval-Valued Inference System based on Simpful</em>)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/README.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ifis-interval-valued-inference-system-based-on-simpful">
+<h1>IFIS (<em>Interval-Valued Inference System based on Simpful</em>)<a class="headerlink" href="#ifis-interval-valued-inference-system-based-on-simpful" title="Link to this heading"></a></h1>
+<p>The motivation for creating a library for the application of interval-valued fuzzy inference was the fact that methods for classifying uncertain data are important in many applications.</p>
+<p>The Interval-Valued Inference System (IFIS) is implemented in the Python 3 programming language. It is an extension of the Simpful library [1] and its dependencies are Numpy and Scipy. The latest version of IFIS currently supports the following features:</p>
+<ol class="arabic simple">
+<li><p>Definition of polygonal (e.g., vertex-based) and functional (e.g., sigmoidal, Gaussian, custom shaped) membership functions.</p></li>
+<li><p>Definition of interval-valued fuzzy rules as strings of text written in natural language.</p></li>
+<li><p>Definition of arbitrarily complex fuzzy rules built with the logic operators AND, OR (suitable interval-valued fuzzy operations built from minimum and maximum, respectively) or NOT (interval fuzzy negation), or arbitrary interval-valued aggregations.</p></li>
+<li><p>Mamdani and Takagi–Sugeno inference methods.</p></li>
+</ol>
+<p>Given values for the antecedents as input, IFIS can perform interval-valued fuzzy inference and provide the final output values.</p>
+<p>The elements of our system are described below:</p>
+<p>I. <em>Preparation of data – 2-fuzzification</em>. Defining the interval fuzzy sets that will subsequently be linked with linguistic variables</p>
+<p>Data preparation takes place via the following two paths:</p>
+<p>a. The data are input as real values. Then the interval-valued fuzzy set is defined by the membership function that describes it. Within the library, standard types of membership functions are defined, e.g. triangular, trapezoidal, sigmoidal, Gaussian, etc. It is also possible to define membership functions based on a specified function or by specifying characteristic points of that function. To define interval-valued fuzzy sets, it is required to provide two features of the membership function, describing, respectively, the beginning and the end of the interval set onto.</p>
+<p>b. The data are input as real value intervals. Then it is possible to describe a fuzzy set with one membership function.</p>
+<p>The interval data obtained for both paths will satisfy the assumption:</p>
+<p>{[a1, a2]:  a1 &lt;= a2,  a1, a2 belongs to [0.1]}.</p>
+<p>II. <em>Inference Process. Rules</em></p>
+<p>The construction of an inference system based on the interval extension of the Simpful library consists in:</p>
+<p>a. Defining the parameters of interval-valued fuzzy sets (parameter functions built as objects of an abstract class, extending the FuzzySet object) linked to linguistic variables. Moreover, we give the boundaries of the universe for each variable/attribute (except when building a function based on points, where the minimum and maximum values determine the limit values) to facilitate their graphic representation.</p>
+<p>b. Determining interval linguistic variables based on the defined interval-valued fuzzy sets – creating objects by extending LinguisticVariable objects. Depending on the selected inference type (Mamdani or Takagi–Sugeno), an appropriate representation of the inferring system output is defined.</p>
+<p>c. Providing a set of inference rules based on the defined interval linguistic variables and fuzzy sets. As part of the rules for premises and output values, you can use the logical operators AND, OR, NOT, and chosen interval-valued aggregation functions, which are also specified in interval form.</p>
+<p>d. Launching the inference process according to the defined types (Mamdani or Takagi–Sugeno) with given values of the variables. For the Takagi–Sugeno system, we also need to define the output functions, along with their identification for rule definitions.</p>
+<p>e. The inference results take into account the appropriate defuzzification method: centroid (Mamdani) or weighted mean (Takagi–Sugeno), and any decision thresholds.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>To be able to use our library you need to download its sources. Earlier you must install the Simpful library from https://github.com/aresio/simpful</p>
+</section>
+<section id="citing-ifis">
+<h2>Citing IFIS<a class="headerlink" href="#citing-ifis" title="Link to this heading"></a></h2>
+<p>If you find IFIS useful for your research, please cite our work as follows:</p>
+<p>[1] Spolaor S., Fuchs C., Cazzaniga P., Kaymak U., Besozzi D., Nobile M.S.: Simpful: a user-friendly Python library for
+fuzzy logic, International Journal of Computational Intelligence Systems, 13(1):1687–1698, 2020 [DOI:10.2991/ijcis.d.201012.002].</p>
+<p>[2] Grochowalski P.,  Kosior D., Gil D., Kozioł W., Pękala B., Dyczkowski K., Python library for interval-valued fuzzy inference, to appear.</p>
+</section>
+<section id="illustrative-examples">
+<h2>Illustrative examples<a class="headerlink" href="#illustrative-examples" title="Link to this heading"></a></h2>
+<p>In this section, we provide example of practical applications, together with their corresponding Python code, to demonstrate the potential and the use of IFIS. They involve the definition of a Mamdani and Takagi–Sugeno IFIS  for the tipping problem.</p>
+<section id="tipping-problem">
+<h3>Tipping problem<a class="headerlink" href="#tipping-problem" title="Link to this heading"></a></h3>
+<p>The tipping problem consists in computing a fair tip (in terms of a percentage of the overall bill), taking into account a restaurant’s services. Listing 1 shows an example of IFIS code defining an interval inference system that calculates the amount of the tip on the basis of two input variables, describing food quality and service quality.</p>
+<p>Listing 1 illustrates a range inference system whose task is to determine the value of the tip for the waiter (as a percentage of the total order value) based on the evaluation of the service in an example restaurant. To determine the size of the tip, two inputs are taken into account: food quality and service quality. The example illustrates how to define an inference system based on interval fuzzy sets. The basis for the newly created library, which has already been mentioned, is the Simpful library, which supports the creation of fuzzy inference systems.</p>
+<p>An example implementation of an inference system based on the Takagi–Sugeno method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">simpful</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">ifis.interval_fuzzy_sets</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">ifis.interval_fuzzy_system</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">ifis.interval_linguistic_variable</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># A simple interval fuzzy inference system for the tipping problem</span>
+<span class="c1"># Create interval fuzzy system object</span>
+<span class="n">iFS</span> <span class="o">=</span> <span class="n">IntervalFuzzySystem</span><span class="p">()</span>
+
+<span class="c1"># Define interval fuzzy sets and interval linguistic variables</span>
+<span class="n">S_1</span> <span class="o">=</span> <span class="n">IntervalFuzzySet</span><span class="p">(</span><span class="n">function_start</span><span class="o">=</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="n">function_end</span><span class="o">=</span><span class="n">Trapezoidal_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">6</span><span class="p">),</span> <span class="n">term</span><span class="o">=</span><span class="s1">&#39;poor&#39;</span><span class="p">)</span>
+<span class="n">S_2</span> <span class="o">=</span> <span class="n">IntervalFuzzySet</span><span class="p">(</span><span class="n">function_start</span><span class="o">=</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="n">function_end</span><span class="o">=</span><span class="n">Trapezoidal_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="n">term</span><span class="o">=</span><span class="s1">&#39;good&#39;</span><span class="p">)</span>
+<span class="n">S_3</span> <span class="o">=</span> <span class="n">IntervalFuzzySet</span><span class="p">(</span><span class="n">function_start</span><span class="o">=</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="n">function_end</span><span class="o">=</span><span class="n">Trapezoidal_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="n">term</span><span class="o">=</span><span class="s1">&#39;excellent&#39;</span><span class="p">)</span>
+<span class="n">iFS</span><span class="o">.</span><span class="n">add_linguistic_variable</span><span class="p">(</span><span class="s2">&quot;Service&quot;</span><span class="p">,</span> <span class="n">IntervalLinguisticVariable</span><span class="p">([</span><span class="n">S_1</span><span class="p">,</span> <span class="n">S_2</span><span class="p">,</span> <span class="n">S_3</span><span class="p">],</span> <span class="n">concept</span><span class="o">=</span><span class="s2">&quot;Service quality&quot;</span><span class="p">,</span> <span class="n">universe_of_discourse</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">]))</span>
+
+<span class="n">F_1</span> <span class="o">=</span> <span class="n">IntervalFuzzySet</span><span class="p">(</span><span class="n">function_start</span><span class="o">=</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span> <span class="n">function_end</span><span class="o">=</span><span class="n">Trapezoidal_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="n">term</span><span class="o">=</span><span class="s1">&#39;rancid&#39;</span><span class="p">)</span>
+<span class="n">F_2</span> <span class="o">=</span> <span class="n">IntervalFuzzySet</span><span class="p">(</span><span class="n">function_start</span><span class="o">=</span><span class="n">Triangular_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="n">function_end</span><span class="o">=</span><span class="n">Trapezoidal_MF</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="n">term</span><span class="o">=</span><span class="s1">&#39;delicious&#39;</span><span class="p">)</span>
+<span class="n">iFS</span><span class="o">.</span><span class="n">add_linguistic_variable</span><span class="p">(</span><span class="s2">&quot;Food&quot;</span><span class="p">,</span> <span class="n">IntervalLinguisticVariable</span><span class="p">([</span><span class="n">F_1</span><span class="p">,</span> <span class="n">F_2</span><span class="p">],</span> <span class="n">concept</span><span class="o">=</span><span class="s2">&quot;Food quality&quot;</span><span class="p">,</span> <span class="n">universe_of_discourse</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">]))</span>
+
+<span class="c1"># Define output crisp values</span>
+<span class="n">iFS</span><span class="o">.</span><span class="n">set_crisp_output_value</span><span class="p">(</span><span class="s2">&quot;small&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">iFS</span><span class="o">.</span><span class="n">set_crisp_output_value</span><span class="p">(</span><span class="s2">&quot;average&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+
+<span class="c1"># Define function for generous tip (food score + service score + 5%)</span>
+<span class="n">iFS</span><span class="o">.</span><span class="n">set_output_function</span><span class="p">(</span><span class="s2">&quot;generous&quot;</span><span class="p">,</span> <span class="s2">&quot;Food+Service+5&quot;</span><span class="p">)</span>
+
+<span class="c1"># Define fuzzy rules</span>
+<span class="n">R1</span> <span class="o">=</span> <span class="s2">&quot;IF (Service IS poor) OR (Food IS rancid) THEN (Tip IS small)&quot;</span>
+<span class="n">R2</span> <span class="o">=</span> <span class="s2">&quot;IF (Service IS good) THEN (Tip IS average)&quot;</span>
+<span class="n">R3</span> <span class="o">=</span> <span class="s2">&quot;IF (Service IS excellent) OR (Food IS delicious) THEN (Tip IS generous)&quot;</span>
+<span class="n">iFS</span><span class="o">.</span><span class="n">add_rules</span><span class="p">([</span><span class="n">R1</span><span class="p">,</span> <span class="n">R2</span><span class="p">,</span> <span class="n">R3</span><span class="p">])</span>
+
+<span class="c1"># Set antecedents values</span>
+<span class="n">iFS</span><span class="o">.</span><span class="n">set_variable</span><span class="p">(</span><span class="s2">&quot;Service&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">iFS</span><span class="o">.</span><span class="n">set_variable</span><span class="p">(</span><span class="s2">&quot;Food&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+
+<span class="c1"># Perform Sugeno interval inference and print output</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">iFS</span><span class="o">.</span><span class="n">Sugeno_interval_inference</span><span class="p">([</span><span class="s2">&quot;Tip&quot;</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>In the first step, on line 8, a root object is created representing the inference system based on interval fuzzy sets. The resources of this object will be supplemented with individual elements of the system enabling the implementation of fuzzy inference. In lines 11–18, interval fuzzy sets are created and linked to the appropriate interval linguistic variables. Each of the interval fuzzy sets (in the current version of the library) is described by two membership functions, one for the beginning of the interval and the other for its end. These functions can be defined by means of defined functions that represent typical membership functions, e.g. triangular, trapezoidal, etc. (taken from the Simpful library), by means of characteristic points that define them or through their own function definitions. In the example considered, two input data (input linguistic variables) are considered: Service quality and Food quality. Service quality is described by three compartments (fuzzy harvests), “poor”, “good” and “excellent”, and Food quality by two fuzzy harvests, “rancid” and “delicious”.</p>
+<p>In lines 21–25, the output of the inferring system is defined, the implementation of which depends on the selected inference method. In the inference system based on the Mamdani method, the output is defined in the form of an interval fuzzy set, whereas with the Takagi–Sugeno inference method, specific output functions are defined. In the example under consideration, two exact output values are given, corresponding to tip values of 5% and 15% of the order value, and one value which is derived from the relationship specified in line 25. Lines 27–30 define the fuzzy inference rules, and lines 33–34 determine the real values of the input variables (two variables in this example). The entire inference process starts on line 38, using the Takagi–Sugeno method of inference. For the example input data, the rating for service quality is equal to 4 and the rating for food quality is equal to 8 (for limits [0,10]), and the result is a tip value defined by the range [14.1667%, 14.78143%]. This specifies the range within which the tip value may vary as a percentage of the total order value.</p>
+</section>
+</section>
+<section id="further-info">
+<h2>Further info<a class="headerlink" href="#further-info" title="Link to this heading"></a></h2>
+<p>If you need further information, please write an e-mail to: pgrochowalski&#64;ur.edu.pl</p>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading"></a></h3>
+<p>[1] Spolaor S., Fuchs C., Cazzaniga P., Kaymak U., Besozzi D., Nobile M.S.: Simpful: a user-friendly Python library
+for fuzzy logic, International Journal of Computational Intelligence Systems, 13(1):1687–1698, 2020
+[DOI:10.2991/ijcis.d.201012.002]</p>
+<p>[2] Grochowalski P.,  Kosior D., Gil D., Kozioł W., Pękala B., Dyczkowski K., Python library for interval-valued fuzzy
+inference, to appear</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to IFIS library’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="ifis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Piotr Grochowalski, Dawid Kosior, Dorota Gil, Wojciech Kozioł, Barbara Pękala, Krzysztof Dyczkowski, Uzay Kaymak, Caro Fuchs, Marco S. Nobile.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+   
+  <div id="other-versions-div" class="rst-versions" data-toggle="rst-versions" role="note" aria-label="Versions" style="visibility: hidden">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Other Versions</span>
+      
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl id="other-versions-dl"/>
+    </div>
+  </div>
+  <script>
+    function addVersion(name) {
+      var dd = document.createElement("dd");
+      var a = document.createElement("a");
+      a.href = "../" + name;
+      a.innerText = name;
+      dd.appendChild(a);
+      document.getElementById('other-versions-dl').appendChild(dd);
+    }
+    // Get versions.txt and add a version for each line
+    fetch("../versions.txt").then(response => {
+      if (response.ok) {
+        document.getElementById('other-versions-div').style.visibility = "visible";
+        return response.text().then(text => text.split(/\r?\n/).forEach(addVersion))
+      }
+    });
+  </script>
+
+
+</body>
+</html>

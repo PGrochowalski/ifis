@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ifis package &mdash; IFIS library 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="ifis" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            IFIS library
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">IFIS (<em>Interval-Valued Inference System based on Simpful</em>)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">ifis</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ifis package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ifis.interval_aggregations">ifis.interval_aggregations module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.IntervalFuzzyAggregator"><code class="docutils literal notranslate"><span class="pre">IntervalFuzzyAggregator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aA1"><code class="docutils literal notranslate"><span class="pre">aA1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aA2"><code class="docutils literal notranslate"><span class="pre">aA2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aA3"><code class="docutils literal notranslate"><span class="pre">aA3()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aA4"><code class="docutils literal notranslate"><span class="pre">aA4()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aAlpha"><code class="docutils literal notranslate"><span class="pre">aAlpha()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aGMean"><code class="docutils literal notranslate"><span class="pre">aGMean()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aMax"><code class="docutils literal notranslate"><span class="pre">aMax()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aMeanMax"><code class="docutils literal notranslate"><span class="pre">aMeanMax()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aMeanPower"><code class="docutils literal notranslate"><span class="pre">aMeanPower()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aMin"><code class="docutils literal notranslate"><span class="pre">aMin()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aMinMax"><code class="docutils literal notranslate"><span class="pre">aMinMax()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aProdMean"><code class="docutils literal notranslate"><span class="pre">aProdMean()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_aggregations.aW"><code class="docutils literal notranslate"><span class="pre">aW()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ifis.interval_fuzzy_sets">ifis.interval_fuzzy_sets module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet"><code class="docutils literal notranslate"><span class="pre">IntervalFuzzySet</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_fuzzy_sets.MF_object_2"><code class="docutils literal notranslate"><span class="pre">MF_object_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_fuzzy_sets.Trapezoidal_MF_2"><code class="docutils literal notranslate"><span class="pre">Trapezoidal_MF_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_fuzzy_sets.Triangular_MF_2"><code class="docutils literal notranslate"><span class="pre">Triangular_MF_2</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ifis-interval-fuzzy-system-module">ifis.interval_fuzzy_system module</a>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem"><code class="docutils literal notranslate"><span class="pre">IntervalFuzzySystem</span></code></a></li>
+</ul></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ifis.interval_linguistic_variable">ifis.interval_linguistic_variable module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_linguistic_variable.IntervalLinguisticVariable"><code class="docutils literal notranslate"><span class="pre">IntervalLinguisticVariable</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ifis-interval-rule-parsing-module">ifis.interval_rule_parsing module</a>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_rule_parsing.IntervalClause"><code class="docutils literal notranslate"><span class="pre">IntervalClause</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_rule_parsing.IntervalFunctional"><code class="docutils literal notranslate"><span class="pre">IntervalFunctional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_rule_parsing.OR"><code class="docutils literal notranslate"><span class="pre">OR()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_rule_parsing.AND"><code class="docutils literal notranslate"><span class="pre">AND()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_rule_parsing.AND_p"><code class="docutils literal notranslate"><span class="pre">AND_p()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_rule_parsing.NOT"><code class="docutils literal notranslate"><span class="pre">NOT()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_rule_parsing.interval_preparse"><code class="docutils literal notranslate"><span class="pre">interval_preparse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_rule_parsing.interval_postparse"><code class="docutils literal notranslate"><span class="pre">interval_postparse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_rule_parsing.interval_find_index_operator"><code class="docutils literal notranslate"><span class="pre">interval_find_index_operator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifis.interval_rule_parsing.interval_recursive_parse"><code class="docutils literal notranslate"><span class="pre">interval_recursive_parse()</span></code></a></li>
+</ul>
+</li>
+<!-- <li class="toctree-l3"><a class="reference internal" href="#module-contents">Module contents</a></li> -->
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">IFIS library</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">ifis</a></li>
+      <li class="breadcrumb-item active">ifis package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ifis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ifis-package">
+<h1>ifis package<a class="headerlink" href="#ifis-package" title="Link to this heading"></a></h1>
+<!-- <p>CZy to si wytla</p> -->
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-ifis.interval_aggregations">
+<span id="ifis-interval-aggregations-module"></span><h2>ifis.interval_aggregations module<a class="headerlink" href="#module-ifis.interval_aggregations" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.IntervalFuzzyAggregator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">IntervalFuzzyAggregator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#IntervalFuzzyAggregator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.IntervalFuzzyAggregator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FuzzyAggregator</span></code></p>
+<p>Creates a new interval fuzzy aggregation object based on the FuzzyAggregator object from the Simpful library.
+Aggregations available: A_Prod, A_MeanPower, A_Mean.</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param verbose<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles verbose mode, default to FALSE</p>
+</dd>
+<dt class="field-even">type verbose<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</div></blockquote>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_aggregations.IntervalFuzzyAggregator.add_variables" title="ifis.interval_aggregations.IntervalFuzzyAggregator.add_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_variables</span></code></a>(*args)</p></td>
+<td><p>Adds variables and their IVFS to perform fuzzy aggregation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ifis.interval_aggregations.IntervalFuzzyAggregator.aggregate" title="ifis.interval_aggregations.IntervalFuzzyAggregator.aggregate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate</span></code></a>([variables, aggregation_fun, ...])</p></td>
+<td><p>The method aggregates the terms of linguistic variables according to their affiliation and membership functions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_aggregations.IntervalFuzzyAggregator.set_variable" title="ifis.interval_aggregations.IntervalFuzzyAggregator.set_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_variable</span></code></a>(name, value)</p></td>
+<td><p>Sets the interval value of a variable to be aggregated.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.IntervalFuzzyAggregator.add_variables">
+<span class="sig-name descname"><span class="pre">add_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#IntervalFuzzyAggregator.add_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.IntervalFuzzyAggregator.add_variables" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Adds variables and their IVFS to perform fuzzy aggregation.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param args<span class="colon">:</span></dt>
+<dd class="field-odd"><p>‘’ifis.interval_fuzzy_sets.IntervalFuzzySet’’ objects, whose ‘term’ argument is the name of
+the variable.</p>
+</dd>
+<dt class="field-even">type args<span class="colon">:</span></dt>
+<dd class="field-even"><p>IVFS objects</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.IntervalFuzzyAggregator.aggregate">
+<span class="sig-name descname"><span class="pre">aggregate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregation_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'product'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregation_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#IntervalFuzzyAggregator.aggregate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.IntervalFuzzyAggregator.aggregate" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>The method aggregates the terms of linguistic variables according to their affiliation and membership functions</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param aggregation_fun<span class="colon">:</span></dt>
+<dd class="field-odd"><p>name of the aggregation we want to use (A_MeanPower, A_GMean, A_MeanMax, A_ProdMean,
+A_MinMax, A_Min, A_Max, A_W, A_1, A_2, A_3, A_4, A_Alpha, A_Mean  are available)</p>
+</dd>
+<dt class="field-even">type aggregation_fun<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param aggregation_param<span class="colon">:</span></dt>
+<dd class="field-odd"><p>an optional parameter that is used in a specific aggregation that contains another
+aggregation inside</p>
+</dd>
+<dt class="field-even">type aggregation_param<span class="colon">:</span></dt>
+<dd class="field-even"><p>str, int</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.IntervalFuzzyAggregator.set_variable">
+<span class="sig-name descname"><span class="pre">set_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#IntervalFuzzyAggregator.set_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.IntervalFuzzyAggregator.set_variable" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Sets the interval value of a variable to be aggregated.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param name<span class="colon">:</span></dt>
+<dd class="field-odd"><p>name of the variables to be set</p>
+</dd>
+<dt class="field-even">type name<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>interval value to be set</p>
+</dd>
+<dt class="field-even">type value<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aA1">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aA1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aA1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aA1" title="Link to this definition"></a></dt>
+<dd><p>Function to aggregate memberships of each linguistic variable terms by aggregation ‘A1’
+This aggregation respect comparability relation: possible</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list which contains lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aA2">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aA2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aA2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aA2" title="Link to this definition"></a></dt>
+<dd><p>Function to aggregate memberships of each linguistic variable terms by aggregation ‘A2’
+This aggregation respect comparability relation: possible</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list which contains lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aA3">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aA3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inside_aggregation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'g'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aA3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aA3" title="Link to this definition"></a></dt>
+<dd><p>Function to aggregate memberships of each linguistic variable terms by aggregation ‘A3’
+This aggregation respect comparability relation: possible</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">param inside_aggregation<span class="colon">:</span></dt>
+<dd class="field-odd"><p>aggregation inside this aggregation function, able to use aggregations are
+geometric mean(g) and power mean(p), default to ‘g’(geometric mean)</p>
+</dd>
+<dt class="field-even">type inside_aggregation<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list which contains lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aA4">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aA4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inside_aggregation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'g'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aA4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aA4" title="Link to this definition"></a></dt>
+<dd><p>Function to aggregate memberships of each linguistic variable terms by aggregation ‘A3’
+This aggregation respect comparability relation: possible</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">param inside_aggregation<span class="colon">:</span></dt>
+<dd class="field-odd"><p>aggregation inside this aggregation function, able to use aggregations are
+geometric mean(g) and power mean(p), default to ‘g’(geometric mean)</p>
+</dd>
+<dt class="field-even">type inside_aggregation<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list which contains lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aAlpha">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aAlpha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aAlpha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aAlpha" title="Link to this definition"></a></dt>
+<dd><p>Function to aggregate memberships of each linguistic variable terms by aggregation alpha
+If param alpha equals 0.5 we get Mean aggregation
+This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">param alpha<span class="colon">:</span></dt>
+<dd class="field-odd"><p>parameter to builds aggregation, default to 0.5</p>
+</dd>
+<dt class="field-even">type alpha<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list which contains lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aGMean">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aGMean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aGMean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aGMean" title="Link to this definition"></a></dt>
+<dd><p>Function to aggregate memberships of each linguistic variable terms by aggregation ‘GeometricMean’
+This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager
+and comparability relations: possible and necessary</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list which contains lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aMax">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aMax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aMax" title="Link to this definition"></a></dt>
+<dd><p>Function to aggregate memberships of each linguistic variable terms by aggregation ‘Max’
+This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager
+and comparability relations: possible and necessary</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list which contains lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aMeanMax">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aMeanMax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aMeanMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aMeanMax" title="Link to this definition"></a></dt>
+<dd><p>Function to aggregate memberships of each linguistic variable terms by aggregation ‘MeanMax’
+This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list which contains lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aMeanPower">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aMeanPower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aMeanPower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aMeanPower" title="Link to this definition"></a></dt>
+<dd><p>Function to aggregate memberships of each linguistic variable terms by aggregation ‘MeanPower’
+This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aMin">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aMin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aMin" title="Link to this definition"></a></dt>
+<dd><p>Function to aggregate memberships of each linguistic variable terms by aggregation ‘Min’
+This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager
+and comparability relations: possible and necessary</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list which contains lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aMinMax">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aMinMax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aMinMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aMinMax" title="Link to this definition"></a></dt>
+<dd><p>Function to aggregate memberships of each linguistic variable terms by aggregation ‘MinMax’
+This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list which contains lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aProdMean">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aProdMean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aProdMean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aProdMean" title="Link to this definition"></a></dt>
+<dd><p>Function to aggregate memberships of each linguistic variable terms by aggregation ‘ProdMean’
+This aggregation respect orders: Lexicographical 1, Lexicographical 2 and Xu Yager</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list which contains lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_aggregations.aW">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_aggregations.</span></span><span class="sig-name descname"><span class="pre">aW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memberships</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_aggregations.html#aW"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_aggregations.aW" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Function to aggregate memberships of each linguistic variable terms by aggregation ‘W’</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param memberships<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list memberships of each linguistic variable terms</p>
+</dd>
+<dt class="field-even">type memberships<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list which contains lower and upper bound of interval after aggregation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-ifis.interval_fuzzy_sets">
+<span id="ifis-interval-fuzzy-sets-module"></span><h2>ifis.interval_fuzzy_sets module<a class="headerlink" href="#module-ifis.interval_fuzzy_sets" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ifis.interval_fuzzy_sets.</span></span><span class="sig-name descname"><span class="pre">IntervalFuzzySet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">term</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FuzzySet</span></code></p>
+<dl class="simple">
+<dt>Class representation Interval-Valued Fuzzy Set (IVFS).</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param function_start<span class="colon">:</span></dt>
+<dd class="field-odd"><p>start function to define a IVFS. Supports pre-implemented membership functions
+Trapezoidal_MF_2, Triangular_MF_2 or user-defined functions, defaults to None</p>
+</dd>
+<dt class="field-even">type function_start<span class="colon">:</span></dt>
+<dd class="field-even"><p>MF_object_2</p>
+</dd>
+<dt class="field-odd">param function_end<span class="colon">:</span></dt>
+<dd class="field-odd"><p>end function to define a IVFS. Supports pre-implemented membership functions
+Trapezoidal_MF_2, Triangular_MF_2 or user-defined functions, defaults to None</p>
+</dd>
+<dt class="field-even">type function_end<span class="colon">:</span></dt>
+<dd class="field-even"><p>MF_object_2</p>
+</dd>
+<dt class="field-odd">param points_start<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of start points to define a IVFS. Each point is defined as a list of two coordinates in the
+universe of discourse/membership degree space, defaults to None</p>
+</dd>
+<dt class="field-even">type points_start<span class="colon">:</span></dt>
+<dd class="field-even"><p>MF_object_2</p>
+</dd>
+<dt class="field-odd">param points_end<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of end points to define a IVFS. Each point is defined as a list of two coordinates in the
+universe of discourse/membership degree space, defaults to None</p>
+</dd>
+<dt class="field-even">type points_end<span class="colon">:</span></dt>
+<dd class="field-even"><p>MF_object_2</p>
+</dd>
+<dt class="field-odd">param term<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string representing the linguistic term to be associated to the Interval Valued Fuzzy Set</p>
+</dd>
+<dt class="field-even">type term<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_term</span></code>()</p></td>
+<td><p>Return the linguistic term associated to this fuzzy set.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value" title="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_value</span></code></a>(v)</p></td>
+<td><p>Return the membership end value of v to this IVFS</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_cut" title="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_cut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_value_cut</span></code></a>(v, cut)</p></td>
+<td><p>Function for return the membership value of v to this IVFS, capped to the cut value.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_points</span></code>(points)</p></td>
+<td><p>Changes points of the point-based fuzzy set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.set_points_interval" title="ifis.interval_fuzzy_sets.IntervalFuzzySet.set_points_interval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_points_interval</span></code></a>(points_start, points_end)</p></td>
+<td><p>Changes points of the point-based IVFS.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>get_type_end</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>get_type_start</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>get_value_cut_end</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>get_value_cut_start</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>get_value_end</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>get_value_fast</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>get_value_fast_end</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>get_value_fast_start</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>get_value_slow</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>get_value_slow_end</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>get_value_slow_start</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>get_value_start</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>integrate</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>set_params</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_type_end">
+<span class="sig-name descname"><span class="pre">get_type_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.get_type_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_type_end" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_type_start">
+<span class="sig-name descname"><span class="pre">get_type_start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.get_type_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_type_start" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value">
+<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.get_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Return the membership end value of v to this IVFS</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param v<span class="colon">:</span></dt>
+<dd class="field-odd"><p>element of the universe of discourse</p>
+</dd>
+<dt class="field-even">return<span class="colon">:</span></dt>
+<dd class="field-even"><p>The membership end value of v to this IVFS</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_cut">
+<span class="sig-name descname"><span class="pre">get_value_cut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.get_value_cut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_cut" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Function for return the membership value of v to this IVFS, capped to the cut value.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param v<span class="colon">:</span></dt>
+<dd class="field-odd"><p>element of the universe of discourse</p>
+</dd>
+<dt class="field-even">param cut<span class="colon">:</span></dt>
+<dd class="field-even"><p>alpha cut of the IVFS</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_cut_end">
+<span class="sig-name descname"><span class="pre">get_value_cut_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.get_value_cut_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_cut_end" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_cut_start">
+<span class="sig-name descname"><span class="pre">get_value_cut_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.get_value_cut_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_cut_start" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_end">
+<span class="sig-name descname"><span class="pre">get_value_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.get_value_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_end" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_fast_end">
+<span class="sig-name descname"><span class="pre">get_value_fast_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.get_value_fast_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_fast_end" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_fast_start">
+<span class="sig-name descname"><span class="pre">get_value_fast_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.get_value_fast_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_fast_start" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_slow_end">
+<span class="sig-name descname"><span class="pre">get_value_slow_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.get_value_slow_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_slow_end" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_slow_start">
+<span class="sig-name descname"><span class="pre">get_value_slow_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.get_value_slow_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_slow_start" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_start">
+<span class="sig-name descname"><span class="pre">get_value_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.get_value_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.get_value_start" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.set_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.set_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.IntervalFuzzySet.set_points_interval">
+<span class="sig-name descname"><span class="pre">set_points_interval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points_end</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#IntervalFuzzySet.set_points_interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.IntervalFuzzySet.set_points_interval" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Changes points of the point-based IVFS.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param points_start<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a list of points to define lower bound of IVFS. Each point is defined as a list of two
+coordinates in the universe of discourse/membership degree space.</p>
+</dd>
+<dt class="field-even">type points_start<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">param points_end<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a list of points to define upper bound of IVFS. Each point is defined as a list of two
+coordinates in the universe of discourse/membership degree space.</p>
+</dd>
+<dt class="field-even">type points_end<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.MF_object_2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ifis.interval_fuzzy_sets.</span></span><span class="sig-name descname"><span class="pre">MF_object_2</span></span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#MF_object_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.MF_object_2" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class representing Interval-Valued Membership Function</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(x)</p></td>
+<td><p>Overriding the __call__ method</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.Trapezoidal_MF_2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ifis.interval_fuzzy_sets.</span></span><span class="sig-name descname"><span class="pre">Trapezoidal_MF_2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#Trapezoidal_MF_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.Trapezoidal_MF_2" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ifis.interval_fuzzy_sets.MF_object_2" title="ifis.interval_fuzzy_sets.MF_object_2"><code class="xref py py-class docutils literal notranslate"><span class="pre">MF_object_2</span></code></a></p>
+<dl class="simple">
+<dt>Class representing Interval-Valued Trapezoidal Membership Function</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param a<span class="colon">:</span></dt>
+<dd class="field-odd"><p>y coordinate for point on start Interval-Valued Trapezoidal Membership Function</p>
+</dd>
+<dt class="field-even">type a<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">param b<span class="colon">:</span></dt>
+<dd class="field-odd"><p>y coordinate for point on first point of top edge Interval-Valued Trapezoidal Membership Function</p>
+</dd>
+<dt class="field-even">type b<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">param c<span class="colon">:</span></dt>
+<dd class="field-odd"><p>y coordinate for point on second point of top edge Interval-Valued Trapezoidal Membership Function</p>
+</dd>
+<dt class="field-even">type c<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">param d<span class="colon">:</span></dt>
+<dd class="field-odd"><p>y coordinate for point on end Interval-Valued Trapezoidal Membership Function</p>
+</dd>
+<dt class="field-even">type d<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(x)</p></td>
+<td><p>Overriding the __call__ method</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_sets.Triangular_MF_2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ifis.interval_fuzzy_sets.</span></span><span class="sig-name descname"><span class="pre">Triangular_MF_2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_sets.html#Triangular_MF_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_sets.Triangular_MF_2" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ifis.interval_fuzzy_sets.MF_object_2" title="ifis.interval_fuzzy_sets.MF_object_2"><code class="xref py py-class docutils literal notranslate"><span class="pre">MF_object_2</span></code></a></p>
+<dl class="simple">
+<dt>Class representing Interval-Valued Triangular Membership Function</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param a<span class="colon">:</span></dt>
+<dd class="field-odd"><p>y coordinate for point on start Interval-Valued Triangular Membership Function</p>
+</dd>
+<dt class="field-even">type a<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">param b<span class="colon">:</span></dt>
+<dd class="field-odd"><p>y coordinate for point on top Interval-Valued Triangular Membership Function</p>
+</dd>
+<dt class="field-even">type b<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">param c<span class="colon">:</span></dt>
+<dd class="field-odd"><p>y coordinate for point on end Interval-Valued Triangular Membership Function</p>
+</dd>
+<dt class="field-even">type c<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(x)</p></td>
+<td><p>Overriding the __call__ method</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+<!-- <section id="ifis-interval-fuzzy-system-module">
+<h2>ifis.interval_fuzzy_system module<a class="headerlink" href="#ifis-interval-fuzzy-system-module" title="Link to this heading"></a></h2>
+</section> -->
+
+<section id="ifis-interval-fuzzy-system-module">
+<span id="ifis-interval-fuzzy-system-module"></span><h2>ifis.interval_fuzzy_system module<a class="headerlink" href="#module-ifis.interval_fuzzy_system" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_system.IntervalFuzzySystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ifis.interval_fuzzy_system.</span></span><span class="sig-name descname"><span class="pre">IntervalFuzzySystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_system</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_banner</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sanitize_input</span></span><span class="o"></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_system.html#IntervalFuzzySystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FuzzySystem</span></code></p>
+<p>Class which creates a new interval valued fuzzy system (IVFS).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type_system</strong> – change type of system able to check 1 and 2 (2 is for special case of intervals when lower
+            and upper bound of intervals is the same), default to 1</p></li>
+<li><p><strong>show_banner</strong> – toggles display of banner, default to True</p></li>
+<li><p><strong>sanitize_input</strong> – sanitize variables names to eliminate non-accepted characters (under development)</p></li>
+<li><p><strong>verbose</strong> – toggles verbose mode, default to False</p></li>
+<li><p><strong>operators</strong> – specifying interval fuzzy operators to be used instead of defaults.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem.set_variable" title="ifis.interval_fuzzy_system.IntervalFuzzySystem.set_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_variable</span></code></a>(name, value, verbose)</p></td>
+<td><p>Sets the interval value of a linguistic variable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem.add_rules" title="ifis.interval_fuzzy_system.IntervalFuzzySystem.add_rules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_rules</span></code></a>(rules, verbose)</p></td>
+<td><p>Adds new interval valued fuzzy rules (IVFR) to the IVFS.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem.mediate_interval" title="ifis.interval_fuzzy_system.IntervalFuzzySystem.mediate_interval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mediate_interval</span></code></a>(outputs, antecedent, results, ignore_errors, ignore_warnings, verbose)</p></td>
+<td><p>Function calculate Sugeno method of IVFS</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem.mediate_interval_Mamdani" title="ifis.interval_fuzzy_system.IntervalFuzzySystem.mediate_interval_Mamdani"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mediate_interval_Mamdani</span></code></a>(outputs, antecedent, results, ignore_errors, ignore_warnings,
+                                 verbose, subdivisions)</p></td>
+<td><p>Function calculate Mamdani method of IVFS</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem.Sugeno_interval_inference" title="ifis.interval_fuzzy_system.IntervalFuzzySystem.Sugeno_interval_inference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sugeno_interval_inference</span></code></a>(terms, ignore_errors, ignore_warnings, verbose)</p></td>
+<td><p>Performs Sugeno interval fuzzy inference.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem.Mamdani_interval_inference" title="ifis.interval_fuzzy_system.IntervalFuzzySystem.Mamdani_interval_inference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mamdani_interval_inference</span></code></a>(terms, subdivisions, ignore_errors, ignore_warnings, verbose)</p></td>
+<td><p>Performs Mamdani interval fuzzy inference.</p></td>
+</tr>
+</tbody>
+</table>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_system.IntervalFuzzySystem.set_variable">
+<span class="sig-name descname"><span class="pre">set_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_system.html#IntervalFuzzySystem.set_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem.set_variable" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Sets the interval value of a linguistic variable.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param name<span class="colon">:</span></dt>
+<dd class="field-odd"><p>name of the linguistic variables to be set.</p>
+</dd>
+<dt class="field-even">type name<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>interval value to be set.</p>
+</dd>
+<dt class="field-even">type value<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+<dt class="field-odd">param verbose<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles verbose mode.</p>
+</dd>
+<dt class="field-even">type verbose<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_system.IntervalFuzzySystem.add_rules">
+<span class="sig-name descname"><span class="pre">add_rules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_system.html#IntervalFuzzySystem.add_rules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem.add_rules" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Adds new interval valued fuzzy rules (IVFR) to the IVFS.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param rules<span class="colon">:</span></dt>
+<dd class="field-odd"><p>name of the linguistic variables to be set.</p>
+</dd>
+<dt class="field-even">type rules<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of str</p>
+</dd>
+<dt class="field-odd">param verbose<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles verbose mode.</p>
+</dd>
+<dt class="field-even">type verbose<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_system.IntervalFuzzySystem.mediate_interval">
+<span class="sig-name descname"><span class="pre">mediate_interval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">antecedent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_warnings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_system.html#IntervalFuzzySystem.mediate_interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem.mediate_interval" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Function calculate Sugeno method of IVFS.</dt><dd><dl class="field-list simple">
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_system.IntervalFuzzySystem.mediate_interval_Mamdani">
+<span class="sig-name descname"><span class="pre">mediate_interval_Mamdani</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">antecedent</span></span></em>,<em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_warnings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdivisions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_system.html#IntervalFuzzySystem.mediate_interval_Mamdani"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem.mediate_interval_Mamdani" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Function calculate Mamdani method of IVFS.</dt><dd><dl class="field-list simple">
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_system.IntervalFuzzySystem.Sugeno_interval_inference">
+<span class="sig-name descname"><span class="pre">Sugeno_interval_inference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_warnings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_system.html#IntervalFuzzySystem.Sugeno_interval_inference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem.Sugeno_interval_inference" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Performs Sugeno interval fuzzy inference.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param terms<span class="colon">:</span></dt>
+<dd class="field-odd"><p>names of the variables on which inference must be performed
+                If empty, all variables appearing in the consequent of a IVFR are inferred.</p>
+</dd>
+<dt class="field-even">type terms<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">param ignore_errors<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles the raising of errors during the inference.</p>
+</dd>
+<dt class="field-even">type ignore_errors<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">param ignore_warnings<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles the raising of warnings during the inference.</p>
+</dd>
+<dt class="field-even">type ignore_warnings<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">param verbose<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles verbose mode.</p>
+</dd>
+<dt class="field-even">type verbose<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">param IntervalFuzzySystem<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the IntervalFuzzySystems object.</p>
+</dd>
+<dt class="field-even">return<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary, containing as keys the variables names and as values their interval inferred values</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_fuzzy_system.IntervalFuzzySystem.Mamdani_interval_inference">
+<span class="sig-name descname"><span class="pre">Mamdani_interval_inference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdivisions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_warnings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_fuzzy_system.html#IntervalFuzzySystem.Mamdani_interval_inference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_fuzzy_system.IntervalFuzzySystem.Mamdani_interval_inference" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Performs Mamdani interval fuzzy inference.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param terms<span class="colon">:</span></dt>
+<dd class="field-odd"><p>names of the variables on which inference must be performed
+                If empty, all variables appearing in the consequent of a IVFR are inferred.</p>
+</dd>
+<dt class="field-even">type terms<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">param subdivisions<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nthe number of integration steps to be performed for calculating fuzzy set area,
+                defaults to 1000.</p>
+</dd>
+<dt class="field-even">type subdivisions<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">param ignore_errors<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles the raising of errors during the inference.</p>
+</dd>
+<dt class="field-even">type ignore_errors<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">param ignore_warnings<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles the raising of warnings during the inference.</p>
+</dd>
+<dt class="field-even">type ignore_warnings<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">param verbose<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles verbose mode.</p>
+</dd>
+<dt class="field-even">type verbose<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">param IntervalFuzzySystem<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the IntervalFuzzySystems object.</p>
+</dd>
+<dt class="field-even">return<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary, containing as keys the variables names and as values their interval inferred values</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+</section>
+
+
+
+<section id="module-ifis.interval_linguistic_variable">
+<span id="ifis-interval-linguistic-variable-module"></span><h2>ifis.interval_linguistic_variable module<a class="headerlink" href="#module-ifis.interval_linguistic_variable" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ifis.interval_linguistic_variable.IntervalLinguisticVariable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ifis.interval_linguistic_variable.</span></span><span class="sig-name descname"><span class="pre">IntervalLinguisticVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FS_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">universe_of_discourse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_linguistic_variable.html#IntervalLinguisticVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_linguistic_variable.IntervalLinguisticVariable" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">LinguisticVariable</span></code></p>
+<p>Class which represent new interval linguistic variable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>FS_list</strong> – a list of IVFS instances</p></li>
+<li><p><strong>concept</strong> – a string providing a brief description of the concept represented by the linguistic variable,
+(optional)</p></li>
+<li><p><strong>universe_of_discourse</strong> – a list of two elements, specifying min and max of the universe of discourse.
+Optional, but it must be specified to exploit plotting facilities.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_linguistic_variable.IntervalLinguisticVariable.draw" title="ifis.interval_linguistic_variable.IntervalLinguisticVariable.draw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw</span></code></a>(ax[, TGT, highlight])</p></td>
+<td><p>This method returns a matplotlib ax, representing all IVFS contained in the liguistic variable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ifis.interval_linguistic_variable.IntervalLinguisticVariable.get_universe_of_discourse" title="ifis.interval_linguistic_variable.IntervalLinguisticVariable.get_universe_of_discourse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_universe_of_discourse</span></code></a>()</p></td>
+<td><p>This method provides the leftmost and rightmost values of the universe of discourse of the linguistic variable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_linguistic_variable.IntervalLinguisticVariable.plot" title="ifis.interval_linguistic_variable.IntervalLinguisticVariable.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>([outputfile, TGT, highlight])</p></td>
+<td><p>Shows a plot representing all IVFS contained in the liguistic variable.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>get_index</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>get_values</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_linguistic_variable.IntervalLinguisticVariable.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TGT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highlight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_linguistic_variable.html#IntervalLinguisticVariable.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_linguistic_variable.IntervalLinguisticVariable.draw" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>This method returns a matplotlib ax, representing all IVFS contained in the liguistic variable.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param ax<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the matplotlib axis to plot to.</p>
+</dd>
+<dt class="field-even">param TGT<span class="colon">:</span></dt>
+<dd class="field-even"><p>show the memberships of a specific element of discourse TGT in the figure.</p>
+</dd>
+<dt class="field-odd">param highlight<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string, indicating the linguistic term/fuzzy set to highlight in the plot.</p>
+</dd>
+<dt class="field-even">return<span class="colon">:</span></dt>
+<dd class="field-even"><p>A matplotlib axis, representing all IVFS contained in the liguistic variable.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_linguistic_variable.IntervalLinguisticVariable.get_universe_of_discourse">
+<span class="sig-name descname"><span class="pre">get_universe_of_discourse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_linguistic_variable.html#IntervalLinguisticVariable.get_universe_of_discourse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_linguistic_variable.IntervalLinguisticVariable.get_universe_of_discourse" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>This method provides the leftmost and rightmost values of the universe of discourse of the linguistic variable.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the two boundary values of the universe of discourse.</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_linguistic_variable.IntervalLinguisticVariable.get_values">
+<span class="sig-name descname"><span class="pre">get_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_linguistic_variable.html#IntervalLinguisticVariable.get_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_linguistic_variable.IntervalLinguisticVariable.get_values" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_linguistic_variable.IntervalLinguisticVariable.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TGT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highlight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_linguistic_variable.html#IntervalLinguisticVariable.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_linguistic_variable.IntervalLinguisticVariable.plot" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Shows a plot representing all IVFS contained in the liguistic variable.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param outputfile<span class="colon">:</span></dt>
+<dd class="field-odd"><p>path and filename where the plot must be saved</p>
+</dd>
+<dt class="field-even">type outputfile<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param TGT<span class="colon">:</span></dt>
+<dd class="field-odd"><p>show the memberships of a specific element of discourse TGT in the figure</p>
+</dd>
+<dt class="field-even">param highlight<span class="colon">:</span></dt>
+<dd class="field-even"><p>string, indicating the linguistic term/fuzzy set to highlight in the plot.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<!-- <section id="ifis-interval-rule-parsing-module">
+<h2>ifis.interval_rule_parsing module<a class="headerlink" href="#ifis-interval-rule-parsing-module" title="Link to this heading"></a></h2>
+</section> -->
+<section id="module-ifis.interval_rule_parsing">
+<span id="ifis-interval-rule-parsing-module"></span><h2>ifis.interval_rule_parsing module<a class="headerlink" href="#module-ifis.interval_rule_parsing" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ifis.interval_rule_parsing.IntervalClause">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ifis.interval_rule_parsing.</span></span><span class="sig-name descname"><span class="pre">IntervalClause</span></span><a class="reference internal" href="_modules/ifis/interval_rule_parsing.html#IntervalClause"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_rule_parsing.IntervalClause" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Clause</span></code></p>
+<p>Class representing Interval Clause</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_rule_parsing.IntervalClause.evaluate_interval" title="ifis.interval_rule_parsing.IntervalClause.evaluate_interval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate_interval</span></code></a>(IntervalFuzzySystem,  verbose,  operators)</p></td>
+<td><p>This method returns a answer for IntervalFuzzySystem object.</p></td>
+</tr>
+</tbody>
+</table>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_rule_parsing.IntervalClause.evaluate_interval">
+<span class="sig-name descname"><span class="pre">evaluate_interval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">IntervalFuzzySystem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_rule_parsing.html#IntervalClause.evaluate_interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_rule_parsing.IntervalClause.evaluate_interval" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>This method returns a answer for IntervalFuzzySystem object.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param IntervalFuzzySystem<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the IntervalFuzzySystems object.</p>
+</dd>
+<dt class="field-even">param verbose<span class="colon">:</span></dt>
+<dd class="field-even"><p>toggles verbose mode, default to FALSE.</p>
+</dd>
+<dt class="field-even">return<span class="colon">:</span></dt>
+<dd class="field-even"><p>answer for Interval Fuzzy System</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ifis.interval_rule_parsing.IntervalFunctional">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ifis.interval_rule_parsing.</span></span><span class="sig-name descname"><span class="pre">IntervalFunctional</span></span><a class="reference internal" href="_modules/ifis/interval_rule_parsing.html#IntervalFunctional"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_rule_parsing.IntervalFunctional" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Functional</span></code></p>
+<p>Class representing Interval Functional</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ifis.interval_rule_parsing.IntervalFunctional.evaluate_interval" title="ifis.interval_rule_parsing.IntervalFunctional.evaluate_interval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate_interval</span></code></a>(IntervalFuzzySystem)</p></td>
+<td><p>This method returns a answer for IntervalFuzzySystem object.</p></td>
+</tr>
+</tbody>
+</table>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ifis.interval_rule_parsing.IntervalFunctional.evaluate_interval">
+<span class="sig-name descname"><span class="pre">evaluate_interval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">IntervalFuzzySystem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_rule_parsing.html#IntervalFunctional.evaluate_interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_rule_parsing.IntervalFunctional.evaluate_interval" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>This method returns a answer for IntervalFuzzySystem object.</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param IntervalFuzzySystem<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the IntervalFuzzySystems object.</p>
+</dd>
+<dt class="field-even">return<span class="colon">:</span></dt>
+<dd class="field-even"><p>answer for Interval Fuzzy System</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_rule_parsing.OR">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_rule_parsing.</span></span><span class="sig-name descname"><span class="pre">OR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x, y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_rule_parsing.html#OR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_rule_parsing.OR" title="Link to this definition"></a></dt>
+<dd><p>Definition of basic OR aggregator in rules</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param x<span class="colon">:</span></dt>
+<dd class="field-odd"><p>first aggregated value</p>
+</dd>
+<dt class="field-even">type x<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple, float</p>
+</dd>
+<dt class="field-odd">param y<span class="colon">:</span></dt>
+<dd class="field-odd"><p>second aggregated value</p>
+</dd>
+<dt class="field-even">type y<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple, float</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>aggregated value</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple, float</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_rule_parsing.AND">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_rule_parsing.</span></span><span class="sig-name descname"><span class="pre">AND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x, y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_rule_parsing.html#AND"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_rule_parsing.AND" title="Link to this definition"></a></dt>
+<dd><p>Definition of basic AND aggregator in rules as Mean aggregation in case intervals and min function when input data are floats</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param x<span class="colon">:</span></dt>
+<dd class="field-odd"><p>first aggregated value</p>
+</dd>
+<dt class="field-even">type x<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple, float</p>
+</dd>
+<dt class="field-odd">param y<span class="colon">:</span></dt>
+<dd class="field-odd"><p>second aggregated value</p>
+</dd>
+<dt class="field-even">type y<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple, float</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>aggregated value</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple, float</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_rule_parsing.AND_p">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_rule_parsing.</span></span><span class="sig-name descname"><span class="pre">AND_p</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x, y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_rule_parsing.html#AND_p"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_rule_parsing.AND_p" title="Link to this definition"></a></dt>
+<dd><p>Definition of basic AND aggregator in rules as Product aggregation in case intervals and product function when input data are floats</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param x<span class="colon">:</span></dt>
+<dd class="field-odd"><p>first aggregated value</p>
+</dd>
+<dt class="field-even">type x<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple, float</p>
+</dd>
+<dt class="field-odd">param y<span class="colon">:</span></dt>
+<dd class="field-odd"><p>second aggregated value</p>
+</dd>
+<dt class="field-even">type y<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple, float</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>aggregated value</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple, float</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_rule_parsing.NOT">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_rule_parsing.</span></span><span class="sig-name descname"><span class="pre">NOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_rule_parsing.html#NOT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_rule_parsing.NOT" title="Link to this definition"></a></dt>
+<dd><p>Negation operator in rules</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param x<span class="colon">:</span></dt>
+<dd class="field-odd"><p>value to negation</p>
+</dd>
+<dt class="field-even">type x<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple, float</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>value after negation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple, float</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_rule_parsing.interval_preparse">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_rule_parsing.</span></span><span class="sig-name descname"><span class="pre">interval_preparse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">STRINGA</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_rule_parsing.html#interval_preparse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_rule_parsing.interval_preparse" title="Link to this definition"></a></dt>
+<dd><p>Function extract the antecedent</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param STRINGA<span class="colon">:</span></dt>
+<dd class="field-odd"><p>text of rule</p>
+</dd>
+<dt class="field-even">type STRINGA<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>antecedent part from rule</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_rule_parsing.interval_postparse">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_rule_parsing.</span></span><span class="sig-name descname"><span class="pre">interval_postparse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">STRINGA, verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_rule_parsing.html#interval_postparse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_rule_parsing.interval_postparse" title="Link to this definition"></a></dt>
+<dd><p>Function extract the successor</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param STRINGA<span class="colon">:</span></dt>
+<dd class="field-odd"><p>text of rule</p>
+</dd>
+<dt class="field-even">type STRINGA<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param verbose<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles verbose mode, default to False</p>
+</dd>
+<dt class="field-even">type verbose<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>successor part from rule</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_rule_parsing.interval_find_index_operator">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_rule_parsing.</span></span><span class="sig-name descname"><span class="pre">interval_find_index_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string, verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_rule_parsing.html#interval_find_index_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_rule_parsing.interval_find_index_operator" title="Link to this definition"></a></dt>
+<dd><p>Function finding indexes of operators in string</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param string<span class="colon">:</span></dt>
+<dd class="field-odd"><p>rule / part of rule</p>
+</dd>
+<dt class="field-even">type string<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param verbose<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles verbose mode, default to False</p>
+</dd>
+<dt class="field-even">type verbose<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>start and end indexes of the found operator</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ifis.interval_rule_parsing.interval_recursive_parse">
+<span class="sig-prename descclassname"><span class="pre">ifis.interval_rule_parsing.</span></span><span class="sig-name descname"><span class="pre">interval_recursive_parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text, verbose, operators, allow_empty</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifis/interval_rule_parsing.html#interval_recursive_parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifis.interval_rule_parsing.interval_recursive_parse" title="Link to this definition"></a></dt>
+<dd><p>Function for parse rules using recursive and extract each of the clauses from rule</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param text<span class="colon">:</span></dt>
+<dd class="field-odd"><p>rule / part of rule</p>
+</dd>
+<dt class="field-even">type text<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param verbose<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles verbose mode, default to False</p>
+</dd>
+<dt class="field-even">type verbose<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">param operators<span class="colon">:</span></dt>
+<dd class="field-odd"><p>recognized in previous calling of function aggregation operator, default to None</p>
+</dd>
+<dt class="field-even">type operators<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param allow_empty<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toggles allow empty clause, default to True</p>
+</dd>
+<dt class="field-even">type allow_empty<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>recognized part of function with aggregators</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>IntervalFunctional</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+
+</section>
+
+<!-- <section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+</section> -->
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="ifis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Piotr Grochowalski, Dawid Kosior, Dorota Gil, Wojciech Kozioł, Barbara Pękala, Krzysztof Dyczkowski, Uzay Kaymak, Caro Fuchs, Marco S. Nobile.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+   
+  <div id="other-versions-div" class="rst-versions" data-toggle="rst-versions" role="note" aria-label="Versions" style="visibility: hidden">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Other Versions</span>
+      
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl id="other-versions-dl"/>
+    </div>
+  </div>
+  <script>
+    function addVersion(name) {
+      var dd = document.createElement("dd");
+      var a = document.createElement("a");
+      a.href = "../" + name;
+      a.innerText = name;
+      dd.appendChild(a);
+      document.getElementById('other-versions-dl').appendChild(dd);
+    }
+    // Get versions.txt and add a version for each line
+    fetch("../versions.txt").then(response => {
+      if (response.ok) {
+        document.getElementById('other-versions-div').style.visibility = "visible";
+        return response.text().then(text => text.split(/\r?\n/).forEach(addVersion))
+      }
+    });
+  </script>
+
+
+</body>
+</html>

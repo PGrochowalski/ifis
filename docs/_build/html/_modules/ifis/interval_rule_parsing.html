@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ifis.interval_rule_parsing &mdash; IFIS library 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            IFIS library
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">IFIS (<em>Interval-Valued Inference System based on Simpful</em>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ifis</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">IFIS library</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ifis.interval_rule_parsing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ifis.interval_rule_parsing</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">simpful</span> <span class="k">as</span> <span class="nn">sf</span>
+<span></span><span class="kn">import</span> <span class="nn">re</span> 
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> 
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+<span class="kn">from</span> <span class="nn">simpful.rule_parsing</span> <span class="kn">import</span> <span class="n">find_index_operator, OR, AND, AND_p, NOT</span>
+
+<div class="viewcode-block" id="IntervalClause">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_rule_parsing.IntervalClause">[docs]</a>
+<span class="k">class</span> <span class="nc">IntervalClause</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">Clause</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing Interval Clause.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="IntervalClause.evaluate_interval">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_rule_parsing.IntervalClause.evaluate_interval">[docs]</a>
+    <span class="k">def</span> <span class="nf">evaluate_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">IntervalFuzzySystem</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">operators</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">try</span>:
+            ans = IntervalFuzzySystem._lvs[<span class="bp">self</span>._variable].get_values(IntervalFuzzySystem._variables[<span class="bp">self</span>._variable])
+        <span class="k">except</span> <span class="bp">KeyError</span>:
+            <span class="k">raise</span> Exception("ERROR: variable '" + <span class="bp">self</span>._variable + "' not defined, or input value not given.\n"
+                            + " ---- PROBLEMATIC CLAUSE:\n"
+                            + str(<span class="bp">self</span>))
+        <span class="k">if</span> verbose:
+            <span class="bp">print</span>("Checking if", <span class="bp">self</span>._variable, )
+            <span class="bp">print</span>("whose value is", IntervalFuzzySystem._variables[<span class="bp">self</span>._variable], )
+            <span class="bp">print</span>("is actually", <span class="bp">self</span>._term)
+            <span class="bp">print</span>("answer:", ans[<span class="bp">self</span>._term])
+        <span class="k">try</span>:
+            <span class="k">return</span> ans[<span class="bp">self</span>._term]
+        <span class="k">except</span> <span class="bp">KeyError</span>:
+            <span class="k">raise</span> Exception("ERROR: term '" + <span class="bp">self</span>._term + "'' not defined.\n"
+                            + " ---- PROBLEMATIC CLAUSE:\n"
+                            + str(<span class="bp">self</span>))
+
+    <span class="k">def</span> __repr__(<span class="bp">self</span>):
+        <span class="k">return</span> "c.(%s IS %s)" % (<span class="bp">self</span>._variable, <span class="bp">self</span>._term)
+
+<div class="viewcode-block" id="IntervalFunctional">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_rule_parsing.IntervalFunctional">[docs]</a>
+<span class="k">class</span> <span class="nc">IntervalFunctional</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">Functional</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing Interval Functional.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_rule_parsing.IntervalFunctional.evaluate_interval">[docs]</a>
+    <span class="k">def</span> evaluate_interval(<span class="bp">self</span>, IntervalFuzzySystem):
+        <span class="k">if</span> <span class="bp">self</span>._A == "":
+            <span class="c1"># support for unary operators</span>
+            <span class="c1"># print("Unary detected")</span>
+            B = <span class="bp">self</span>._B.evaluate_interval(IntervalFuzzySystem)
+            <span class="k">return</span> array(eval(<span class="bp">self</span>._fun + "(%s)" % B))
+        <span class="k">else</span>:
+            A = <span class="bp">self</span>._A.evaluate_interval(IntervalFuzzySystem)
+            B = <span class="bp">self</span>._B.evaluate_interval(IntervalFuzzySystem)
+            <span class="c1"># Temporary solution - start</span>
+            C = B
+            <span class="k">if</span> <span class="bp">type</span>(B) is numpy.ndarray:
+                <span class="k">if</span> B.size > 1:
+                    C = B[0], B[1]
+                <span class="k">else</span>:
+                    C = B
+            <span class="k">if</span> <span class="bp">type</span>(B) is <span class="bp">tuple</span>:
+                <span class="k">if</span> <span class="bp">len</span>(B) > 1:
+                    C = B[0], B[1]
+                <span class="k">else</span>:
+                    C = B
+            <span class="k">if</span> <span class="bp">type</span>(B) is float:
+                C = B
+            <span class="c1"># Temporary solution - end</span>
+            <span class="k">return</span> array(eval(<span class="bp">self</span>._fun + "(%s, %s)" % (A, C)))
+
+
+<div class="viewcode-block" id="OR">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_rule_parsing.OR">[docs]</a>
+<span class="c1"># basic definitions of</span>
+<span class="k">def</span> OR(x, y):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Definition of basic OR aggregator in rules</span>
+<span class="sd">           :param x: first aggregated value</span>
+<span class="sd">           :type x: tuple, float</span>
+<span class="sd">           :param y: second aggregated value</span>
+<span class="sd">           :type y: tuple, float</span>
+<span class="sd">           :return: aggregated value</span>
+<span class="sd">           :rtype: tuple, float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">type</span>(x) is <span class="bp">tuple</span> and <span class="bp">type</span>(y) is <span class="bp">tuple</span>:
+        <span class="k">return</span> <span class="bp">max</span>(x[0], y[0]), <span class="bp">max</span>(x[1], y[1])
+    <span class="k">else</span>:
+        <span class="k">return</span> <span class="bp">max</span>(x, y)
+
+<div class="viewcode-block" id="AND">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_rule_parsing.AND">[docs]</a>
+<span class="k">def</span> AND(x, y):
+    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Definition of basic AND aggregator in rules as Mean aggregation in case intervals and min function when input data are floats</span>
+<span class="sd">           :param x: first aggregated value</span>
+<span class="sd">           :type x: tuple, float</span>
+<span class="sd">           :param y: second aggregated value</span>
+<span class="sd">           :type y: tuple, float</span>
+<span class="sd">           :return: aggregated value</span>
+<span class="sd">           :rtype: tuple, float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">type</span>(x) is <span class="bp">tuple</span> and <span class="bp">type</span>(y) is <span class="bp">tuple</span>:
+        <span class="c1"># return min(x[0], y[0]), min(x[1], y[1])</span>
+        <span class="k">return</span> (x[0] + y[0]) / 2.0, (x[1] + y[1]) / 2.0
+        <span class="c1"># return pow(x[0] * y[0], 0.5), pow(x[1] * y[1], 0.5)</span>
+        <span class="c1"># return x[0] * y[0], x[1] * y[1]</span>
+    <span class="k">else</span>:
+        <span class="k">return</span> <span class="bp">min</span>(x, y)
+        <span class="c1"># return (x + y)/2.0</span>
+        <span class="c1"># return pow(x * y, 0.5)</span>
+        <span class="c1"># return x * y</span>
+
+<div class="viewcode-block" id="AND_p">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_rule_parsing.AND_p">[docs]</a>
+<span class="k">def</span> AND_p(x, y):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Definition of basic AND aggregator in rules as Mean aggregation in case intervals and min function when input data are floats</span>
+<span class="sd">           :param x: first aggregated value</span>
+<span class="sd">           :type x: tuple, float</span>
+<span class="sd">           :param y: second aggregated value</span>
+<span class="sd">           :type y: tuple, float</span>
+<span class="sd">           :return: aggregated value</span>
+<span class="sd">           :rtype: tuple, float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">type</span>(x) is <span class="bp">tuple</span> and <span class="bp">type</span>(y) is <span class="bp">tuple</span>:
+        <span class="k">return</span> x[0] * y[0], x[1] * y[1]
+    <span class="k">else</span>:
+        <span class="k">return</span> x * y
+
+<div class="viewcode-block" id="NOT">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_rule_parsing.NOT">[docs]</a>
+<span class="k">def</span> NOT(x):
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Negation operator in rules</span>
+<span class="sd">           :param x: value to negation</span>
+<span class="sd">           :type x: tuple, float</span>
+<span class="sd">           :return: value after negation</span>
+<span class="sd">           :rtype: tuple, float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">type</span>(x) is <span class="bp">tuple</span>:
+        <span class="k">return</span> 1. - x[1], 1. - x[0]
+    <span class="k">else</span>:
+        <span class="k">return</span> 1. - x
+
+<div class="viewcode-block" id="interval_preparse">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_rule_parsing.interval_preparse">[docs]</a>
+<span class="k">def</span> interval_preparse(STRINGA):
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function extract the antecedent</span>
+<span class="sd">           :param STRINGA: text of rule</span>
+<span class="sd">           :type STRINGA: str</span>
+<span class="sd">           :return: antecedent part from rule</span>
+<span class="sd">           :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># extract the antecedent</span>
+    <span class="k">return</span> STRINGA[STRINGA.<span class="bp">find</span>("IF") + 2:STRINGA.<span class="bp">find</span>(" THEN")].<span class="bp">strip()</span>
+
+<div class="viewcode-block" id="interval_postparse">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_rule_parsing.interval_postparse">[docs]</a>
+<span class="k">def</span> interval_postparse(STRINGA, <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>):
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function extract the successor</span>
+<span class="sd">           :param STRINGA: text of rule</span>
+<span class="sd">           :type STRINGA: str</span>
+<span class="sd">           :return: successor part from rule</span>
+<span class="sd">           :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    stripped = STRINGA[STRINGA.<span class="bp">find</span>(" THEN") + 5:].strip("() ")
+    <span class="k">if</span> STRINGA.<span class="bp">find</span>("THEN") == -1:
+        <span class="k">raise</span> Exception("ERROR: badly formatted rule, please check capitalization and syntax.\n"
+                        + " ---- PROBLEMATIC RULE:\n"
+                        + STRINGA)
+    <span class="k">if</span> re.match(r"P\(", stripped) is not None:
+        <span class="k">return</span> tuple(re.findall(r"\w+(?=\sis)|(?<=is\s)\w+|\d\.\d\d", stripped))
+    <span class="k">else</span>:
+        <span class="k">return</span> tuple(re.findall(r"\w+(?=\sIS\s)|(?<=\sIS\s)\w+", stripped))
+
+<div class="viewcode-block" id="interval_find_index_operator">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_rule_parsing.interval_find_index_operator">[docs]</a>
+<span class="k">def</span> interval_find_index_operator(string, <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>):
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function finding indexes of operators in string</span>
+<span class="sd">           :param string: rule/part of rule</span>
+<span class="sd">           :type string: str</span>
+<span class="sd">           :param verbose: toggles verbose mode, default to True</span>
+<span class="sd">           :type verbose: bool</span>
+<span class="sd">           :return: start and end indexes of the found operator</span>
+<span class="sd">           :rtype: tuple</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> verbose: <span class="bp">print</span>(" * Looking for an operator in", string)
+    pos = 0
+    par = 1
+    while (par > 0):
+        pos += 1
+        <span class="c1"># <span class="k">if</span> pos>=<span class="bp">len</span>(string):</span>
+        <span class="c1"># <span class="bp">print</span>(pos, pos2)</span>
+        <span class="c1"># <span class="k">raise</span> Exception("badly formatted rule, terminating")</span>
+        <span class="k">if</span> string[pos] == ")": par -= 1
+        <span class="k">if</span> string[pos] == "(": par += 1
+    pos2 = pos
+    while (string[pos2] != "("):
+        pos2 += 1
+    <span class="k">return</span> pos + 1, pos2
+
+<div class="viewcode-block" id="interval_recursive_parse">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_rule_parsing.interval_recursive_parse">[docs]</a>
+<span class="k">def</span> interval_recursive_parse(text, <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>, <span class="n">operators</span><span class="o">=</span><span class="kc">None</span>, <span class="n">allow_empty</span><span class="o">=</span><span class="kc">True</span>):
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function for parse rules using recursive and extract each of the clauses from rule</span>
+<span class="sd">           :param text: rule / part of rule</span>
+<span class="sd">           :type text: str</span>
+<span class="sd">           :param verbose: toggles verbose mode, default to False</span>
+<span class="sd">           :type verbose: bool</span>
+<span class="sd">           :param operators: recognized in previous calling of function aggregation operator, default to None</span>
+<span class="sd">           :type operators: str</span>
+<span class="sd">           :param allow_empty: toggles allow empty clause, default to True</span>
+<span class="sd">           :type allow_empty: bool</span>
+<span class="sd">           :return: recognized part of function with aggregators</span>
+<span class="sd">           :rtype: IntervalFunctional</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># remove useless spaces around text</span>
+    text = text.strip()</span>
+
+    <span class="c1"># case 0: empty string</span>
+    <span class="k">if</span> text == "" or text == "()":
+        <span class="k">if</span> verbose: <span class="bp">print</span>("WARNING: empty clause detected")
+        <span class="k">if</span> not allow_empty:
+            <span class="k">raise</span> Exception("ERROR: emtpy clauses not allowed")
+        <span class="k">else</span>:
+            <span class="k">return</span> ""
+
+    <span class="c1"># case 1: simple clause ("this IS that")</span>
+    <span class="k">if</span> regex_clause.match(text):
+        <span class="k">if</span> verbose:
+            <span class="bp">print</span>(" * Simple clause matched")
+
+        variable = text[:text.<span class="bp">find</span>(" IS")].strip()
+        term = text[text.<span class="bp">find</span>(" IS") + 3:].strip()
+        ret_clause = IntervalClause(variable, term, verbose=verbose)
+        <span class="k">if</span> verbose:
+            <span class="bp">print</span>(" * Rule:", ret_clause)
+        <span class="k">return</span> ret_clause
+
+    el<span class="k">if</span> regex_clause_with_parentheses.match(text):
+        <span class="k">if</span> verbose:
+            <span class="bp">print</span>(" * Simple clause with parentheses matched")
+
+        variable = text[1:text.<span class="bp">find</span>(" IS")].strip()
+        term = text[text.<span class="bp">find</span>(" IS") + 3:-1].strip()
+        ret_clause = IntervalClause(variable, term, verbose=verbose)
+        <span class="k">if</span> verbose:
+            <span class="bp">print</span>(" * Rule:", ret_clause)
+        <span class="k">return</span> ret_clause
+
+    <span class="k">else</span>:
+        <span class="k">if</span> verbose:
+            <span class="bp">print</span>(" * Regular expression is not matching with single atomic clause")
+
+        <span class="c1"># possible valid cases:</span>
+        <span class="c1"># 1) atomic clause</span>
+        <span class="c1"># 2) atomic clause OPERATOR atomic clause</span>
+        <span class="c1"># 3) NOT atomic clause</span>
+        <span class="c1"># 4) (clause OPERATOR clause)</span>
+        <span class="c1"># 5) ((...)) # experimental</span>
+
+        <span class="k">if</span> text[:3] == "NOT":
+            beginindop = 0
+            endindop = 3
+        el<span class="k">if</span> text[:4] == "(NOT":
+            text = text[1:-1]
+            beginindop = 0
+            endindop = 3
+        <span class="k">else</span>:
+            <span class="k">try</span>:
+                beginindop, endindop = find_index_operator(text, verbose=verbose)
+
+            <span class="k">except</span> <span class="bp">IndexError</span>:
+                <span class="c1"># last attempt: remove parentheses (</span><span class="k">if</span> any!)
+                <span class="k">try</span>:
+                    <span class="k">if</span> text[0] == "(" and text[-1] == ")":
+                        text = text[1:-1]
+                        <span class="k">return</span> interval_recursive_parse(text, operators=operators, verbose=verbose,
+                                                        allow_empty=allow_empty)
+                    <span class="k">else</span>:
+                        <span class="k">raise</span> Exception("ERROR: badly formatted rule, please check capitalization and syntax.\n"
+                                        + " ---- PROBLEMATIC RULE:\n"
+                                        + text)
+
+                <span class="k">except</span>:
+                    <span class="k">raise</span> Exception("ERROR: badly formatted rule, please check capitalization and syntax.\n"
+                                    + " ---- PROBLEMATIC RULE:\n"
+                                    + text)
+
+        firsthalf = text[:beginindop].strip()
+        secondhalf = text[endindop:].strip()
+        operator = text[beginindop:endindop].strip()
+        <span class="k">if</span> operator.<span class="bp">find</span>(" ") > -1:
+            <span class="k">if</span> verbose:
+                <span class="bp">print</span>("WARNING: space in operator '%s' detected" % operator)
+                <span class="bp">print</span>(" " * (28 + operator.<span class="bp">find</span>(" ")) + "^")
+            <span class="k">raise</span> Exception("ERROR: operator %s invalid: cannot use spaces in operators" % operator)
+
+        <span class="k">if</span> verbose:    
+            <span class="bp">print</span>("  -- Found %s *%s* %s" % (firsthalf, operator, secondhalf))
+
+        <span class="k">try</span>:
+            novel_fun = IntervalFunctional(operator,
+                                           interval_recursive_parse(firsthalf, verbose=verbose, operators=operators,
+                                                                    allow_empty=allow_empty),
+                                           interval_recursive_parse(secondhalf, verbose=verbose, operators=operators,
+                                                                    allow_empty=allow_empty),
+                                           operators=operators)
+        <span class="k">except</span>:
+            <span class="k">raise</span> Exception("ERROR: badly formatted rule, please check capitalization and syntax.\n"
+                            + " ---- PROBLEMATIC RULE:\n"
+                            + text)
+        <span class="k">return</span> novel_fun
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Piotr Grochowalski, Dawid Kosior, Dorota Gil, Wojciech Kozioł, Barbara Pękala, Krzysztof Dyczkowski, Uzay Kaymak, Caro Fuchs, Marco S. Nobile.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+   
+  <div id="other-versions-div" class="rst-versions" data-toggle="rst-versions" role="note" aria-label="Versions" style="visibility: hidden">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Other Versions</span>
+      
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl id="other-versions-dl"/>
+    </div>
+  </div>
+  <script>
+    function addVersion(name) {
+      var dd = document.createElement("dd");
+      var a = document.createElement("a");
+      a.href = "../../../" + name;
+      a.innerText = name;
+      dd.appendChild(a);
+      document.getElementById('other-versions-dl').appendChild(dd);
+    }
+    // Get versions.txt and add a version for each line
+    fetch("../../../versions.txt").then(response => {
+      if (response.ok) {
+        document.getElementById('other-versions-div').style.visibility = "visible";
+        return response.text().then(text => text.split(/\r?\n/).forEach(addVersion))
+      }
+    });
+  </script>
+
+
+</body>
+</html>

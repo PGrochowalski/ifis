@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ifis.interval_fuzzy_system &mdash; IFIS library 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            IFIS library
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">IFIS (<em>Interval-Valued Inference System based on Simpful</em>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ifis</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">IFIS library</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ifis.interval_fuzzy_system</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ifis.interval_fuzzy_system</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">simpful</span> <span class="k">as</span> <span class="nn">sf</span>
+<span></span><span class="kn">import</span> <span class="nn">re</span> 
+<span class="kn">from</span> <span class="nn">simpful.fuzzy_sets</span> <span class="kn">import</span> <span class="n">UF_object</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array, linspace</span>
+<span class="kn">from</span> <span class="nn">.interval_rule_parsing</span> <span class="kn">import</span> <span class="n">interval_recursive_parse, interval_preparse, interval_postparse</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<div class="viewcode-block" id="IntervalFuzzySystem">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_fuzzy_system.IntervalFuzzySystem">[docs]</a>
+<span class="k">class</span> <span class="nc">IntervalFuzzySystem</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">FuzzySystem</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class which creates a new interval valued fuzzy system (IVFS).</span>
+<span class="sd">       :param type_system: change type of system able to check 1 and 2 (2 is for special case of intervals when lower
+            and upper bound of intervals is the same), default to 1</span>
+<span class="sd">       :type type_system: int</span>
+<span class="sd">       :param show_banner: toggles display of banner, default to True</span>
+<span class="sd">       :type show_banner: bool</span>
+<span class="sd">       :param sanitize_input: sanitize variables names to eliminate non-accepted characters (under development).</span>
+<span class="sd">       :param verbose: toggles verbose mode, default to False</span>
+<span class="sd">       :type verbose: bool</span>
+<span class="sd">       :param operators: specifying interval fuzzy operators to be used instead of defaults. Currently supported operators: 'AND_PRODUCT'.</span>
+<span class="sd">       :type operators: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_system</span><span class="o">=</span><span class="p">1,</span> <span class="n">operators</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_banner</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sanitize_input</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(IntervalFuzzySystem, <span class="bp">self</span>)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">operators</span><span class="p">,</span> <span class="n">show_banner</span><span class="p">,</span> <span class="n">sanitize_input</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_type_system</span><span class="o"> = </span>type_system
+
+<div class="viewcode-block" id="IntervalFuzzySystem.set_variable">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_fuzzy_system.IntervalFuzzySystem.set_variable">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w"></span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Sets the interval value of a linguistic variable.</span>
+<span class="sd">           :param name: name of the linguistic variables to be set</span>
+<span class="sd">           :type name: str</span>
+<span class="sd">           :param value: interval value to be set</span>
+<span class="sd">           :type value: tuple</span>
+<span class="sd">           :param verbose: toggles verbose mode, default to False</span>
+<span class="sd">           :type verbose: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="bp">type</span>(value) <span class="ow">is</span> <span class="bp">tuple</span>:
+            <span class="k">if</span> <span class="bp">self</span>._sanitize_input: name = <span class="bp">self</span>._sanitize(name)
+            <span class="k">try</span>:
+                value = <span class="bp">float</span>(value[0]), <span class="bp">float</span>(value[1])
+                <span class="bp">self</span>._variables[name] = value
+                <span class="k">if</span> verbose: <span class="bp">print</span>(<span class="s2">&quot; * Variable %s set to %f&quot;</span>% (name, value))
+            <span class="k">except</span> <span class="bp">ValueError</span>:
+                <span class="k">raise</span> <span class="bp">Exception</span>(
+                    <span class="s2">&quot;ERROR: specified value for &quot;</span>+ name + &quot;</span>is not an interval of integer or <span class="bp">float</span> numbers: &quot;</span>+ value)
+        <span class="k">else</span>:
+            <span class="nb">super</span>().set_variable(name, value, verbose)
+
+<div class="viewcode-block" id="IntervalFuzzySystem.add_rules">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_fuzzy_system.IntervalFuzzySystem.add_rules">[docs]</a>
+    <span class="k">def</span> <span class="fm">add_rules</span>(<span class="bp">self</span>, rules, verbose=<span class="kc">False</span>):
+<span class="w"></span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Adds new interval valued fuzzy rules (IVFR) to the IVFS.</span>
+<span class="sd">           :param rules: list of interval valued fuzzy rules to be added. Rules must be specified as strings</span>
+<span class="sd">           :type rules: list of str</span>
+<span class="sd">           :param verbose: toggles verbose mode, default to False</span>
+<span class="sd">           :type verbose: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> rule <span class="k">in</span> rules:
+
+            # optional: remove invalid symbols
+            <span class="k">if</span> <span class="bp">self</span>._sanitize_input: rule = <span class="bp">self</span>._sanitize(rule)
+
+            parsed_antecedent = interval_recursive_parse(interval_preparse(rule), verbose=verbose,
+                                                         operators=<span class="bp">self</span>._operators)
+            parsed_consequent = interval_postparse(rule, verbose=verbose)
+            <span class="bp">self</span>._rules.append([parsed_antecedent, parsed_consequent])
+            <span class="k">if</span> verbose:
+                <span class="bp">print</span>(<span class="s2">&quot; * Added rule IF&quot;</span>, parsed_antecedent, <span class="s2">&quot;THEN&quot;</span>, parsed_consequent)
+                <span class="bp">print</span>()
+        <span class="k">if</span> verbose: <span class="bp">print</span>(<span class="s2">&quot; * %d rules successfully added&quot;</span>% len(rules))
+
+<div class="viewcode-block" id="IntervalFuzzySystem.mediate_interval">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_fuzzy_system.IntervalFuzzySystem.mediate_interval">[docs]</a>
+    <span class="k">def</span> <span class="fm">mediate_interval</span>(<span class="bp">self</span>, outputs, antecedent, results, ignore_errors=<span class="kc">False</span>, ignore_warnings=<span class="kc">False</span>, verbose=<span class="kc">False</span>):
+<span class="w"></span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Function calculate Sugeno method of IVFS.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        final_result = {}
+
+        list_crisp_values = [x[0] <span class="k">for</span> x <span class="k">in</span> <span class="bp">self</span>._crispvalues.items()]
+        list_output_funs = [x[0] <span class="k">for</span> x <span class="k">in</span> <span class="bp">self</span>._outputfunctions.items()]
+
+        <span class="k">for</span> output <span class="k">in</span> outputs:
+            <span class="k">if</span> verbose:
+                <span class="bp">print</span>(<span class="s2">&quot; * Processing output <span class="k">for</span> variable '%s'&quot;</span>% output)
+                <span class="bp">print</span>(<span class="s2">&quot;   whose universe of discourse is:&quot;</span>, <span class="bp">self</span>._lvs[output].Mamdani_interval_inference())
+                <span class="bp">print</span>(<span class="s2">&quot;   contains the following fuzzy sets:&quot;</span>, <span class="bp">self</span>._lvs[output]._FSlist)
+
+            num_start = 0
+            den_start = 0
+            num_end = 0
+            den_end = 0
+
+            <span class="k">for</span> (ant, res) <span class="k">in</span> zip(antecedent, results):
+                outname = res[0]
+                outterm = res[1]
+                crisp = True
+                <span class="k">if</span> outname == output:
+                    <span class="k">if</span> outterm not <span class="k">in</span> list_crisp_values:
+                        crisp = False
+                        <span class="k">if</span> outterm not <span class="k">in</span> list_output_funs:
+                            <span class="k">raise</span> <span class="bp">Exception</span>("ERROR: one rule calculates an output named '"
+                                            + outterm
+                                            + "', but I cannot find it among the output terms.\n"
+                                            + &quot;</span>--- PROBLEMATIC RULE:\n"
+                                            + <span class="s2">&quot;IF &quot;</span>+ str(ant) + &quot;</span>THEN &quot;</span>+ str(res))
+                    <span class="k">if</span> crisp:
+                        crispvalue = <span class="bp">self</span>._crispvalues[outterm]
+                        crispvalue_start = <span class="bp">self</span>._crispvalues[outterm]
+                        crispvalue_end = <span class="bp">self</span>._crispvalues[outterm]
+                    el<span class="k">if</span> isinstance(<span class="bp">self</span>._outputfunctions[outterm], MF_object):
+                        <span class="k">raise</span> <span class="bp">Exception</span>(
+                            <span class="s2">&quot;ERROR <span class="k">in</span> consequent of rule %s.\nSugeno reasoning does not support output fuzzy sets.&quot;</span>% (
+                                    <span class="s2">&quot;IF &quot;</span>+ str(ant) + &quot;</span>THEN &quot;</span>+ str(res)))
+                    <span class="k">else</span>:
+                        <span class="k">if</span> <span class="bp">self</span>._type_system == 1:
+                            string_to_evaluate = <span class="bp">self</span>._outputfunctions[outterm]
+                        el<span class="k">if</span> <span class="bp">self</span>._type_system == 2:
+                            string_to_evaluate_start = <span class="bp">self</span>._outputfunctions[outterm]
+                            string_to_evaluate_end = <span class="bp">self</span>._outputfunctions[outterm]
+
+                        <span class="k">for</span> k, v <span class="k">in</span> <span class="bp">self</span>._variables.items():
+                            # old version
+                            # string_to_evaluate = string_to_evaluate.replace(k,str(v))
+
+                            # match a variable name preceeded or followed by non-alphanumeric and _ characters
+                            # substitute it with its numerical value
+                            <span class="k">if</span> <span class="bp">self</span>._type_system == 2 and <span class="bp">type</span>(v) <span class="ow">is</span> <span class="bp">tuple</span>:
+                                string_to_evaluate_start = re.sub(r"(?P<front>\W|^)&quot;</span>+ k + r"(?P<end>\W|$)&quot;</span>,
+                                                                  r"\g<front>&quot;</span>+ str(v[0]) + r"\g<end>&quot;</span>,
+                                                                  string_to_evaluate_start)
+                                string_to_evaluate_end = re.sub(r"(?P<front>\W|^)&quot;</span>+ k + r"(?P<end>\W|$)&quot;</span>,
+                                                                r"\g<front>&quot;</span>+ str(v[1]) + r"\g<end>&quot;</span>,
+                                                                string_to_evaluate_end)
+                            <span class="k">else</span>:
+                                string_to_evaluate = re.sub(r"(?P<front>\W|^)&quot;</span>+ k + r"(?P<end>\W|$)&quot;</span>,
+                                                            r"\g<front>&quot;</span>+ str(v) + r"\g<end>&quot;</span>, string_to_evaluate)
+
+                        <span class="k">if</span> <span class="bp">self</span>._type_system == 2:
+                            crispvalue_start = eval(string_to_evaluate_start)
+                            crispvalue_end = eval(string_to_evaluate_end)
+                        <span class="k">else</span>:
+                            crispvalue = eval(string_to_evaluate)
+
+                    <span class="k">try</span>:
+                        value = ant.evaluate_interval(<span class="bp">self</span>)
+                    <span class="k">except</span> RuntimeError:
+                        <span class="k">raise</span> <span class="bp">Exception</span>("ERROR: one rule could not be evaluated\n"
+                                        + &quot;</span>--- PROBLEMATIC RULE:\n"
+                                        + <span class="s2">&quot;IF &quot;</span>+ str(ant) + &quot;</span>THEN &quot;</span>+ str(res) + "\n&quot;</span>)
+
+                    <span class="k">if</span> <span class="bp">self</span>._type_system == 2:
+                        temp_start = value[0] * crispvalue_start
+                        num_start += temp_start
+                        den_start += value[0]
+
+                        temp_end = value[1] * crispvalue_end
+                        num_end += temp_end
+                        den_end += value[1]
+                    <span class="k">else</span>:
+                        temp_start = value[0] * crispvalue
+                        num_start += temp_start
+                        den_start += value[0]
+
+                        temp_end = value[1] * crispvalue
+                        num_end += temp_end
+                        den_end += value[1]
+
+            <span class="k">try</span>:
+                <span class="k">if</span> den_start == 0.0 and den_end == 0.0:
+                    final_result[output] = (0.0, 0.0)
+                    <span class="k">if</span> not ignore_warnings:
+                        <span class="bp">print</span>(
+                            <span class="s2">&quot;WARNING: the sum of rules' firing <span class="k">for</span> variable '%s' <span class="ow">is</span> equal to 0. The result of the Sugeno inference was set to (0,0).&quot;</span>% output)
+                el<span class="k">if</span> den_start == 0.0:
+                    final_result[output] = (0.0, num_end / den_end)
+                el<span class="k">if</span> den_end == 0.0:
+                    final_result[output] = (num_start / den_start, 0.0)
+                <span class="k">else</span>:
+                    interval_start = num_start / den_start
+                    interval_end = num_end / den_end
+                    <span class="k">if</span> interval_start <= interval_end:
+                        final_result[output] = interval_start, interval_end
+                    <span class="k">else</span>:
+                        final_result[output] = interval_end, interval_start
+
+            <span class="k">except</span> ArithmeticError:
+                <span class="k">if</span> ignore_errors:
+                    <span class="bp">print</span>(
+                        <span class="s2">&quot;WARNING: cannot per<span class="k">for</span>m Sugeno inference <span class="k">for</span> variable '%s'. The variable appears only as antecedent <span class="k">in</span> the rules or an arithmetic error occurred.&quot;</span>% output)
+                <span class="k">else</span>:
+                    <span class="k">raise</span> <span class="bp">Exception</span>(
+                        <span class="s2">&quot;ERROR: cannot per<span class="k">for</span>m Sugeno inference <span class="k">for</span> variable '%s'. The variable appears only as antecedent <span class="k">in</span> the rules or an arithmetic error occurred.&quot;</span>% output)
+
+        <span class="k">return</span> final_result
+
+<div class="viewcode-block" id="IntervalFuzzySystem.mediate_interval_Mamdani">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_fuzzy_system.IntervalFuzzySystem.mediate_interval_Mamdani">[docs]</a>
+    <span class="k">def</span> <span class="fm">mediate_interval_Mamdani</span>(<span class="bp">self</span>, outputs, antecedent, results, ignore_errors=<span class="kc">False</span>, ignore_warnings=<span class="kc">False</span>,
+                                 verbose=<span class="kc">False</span>, subdivisions=1000):
+<span class="w"></span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Function calculate Mamdani method of IVFS.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        final_result = {}
+
+        <span class="k">for</span> output <span class="k">in</span> outputs:
+
+            <span class="k">if</span> verbose:
+                <span class="bp">print</span>(<span class="s2">&quot; * Processing output <span class="k">for</span> variable '%s'&quot;</span>% output)
+                <span class="bp">print</span>(<span class="s2">&quot;   whose universe of discourse is:&quot;</span>, <span class="bp">self</span>._lvs[output].Mamdani_interval_inference())
+                <span class="bp">print</span>(<span class="s2">&quot;   contains the following fuzzy sets:&quot;</span>, <span class="bp">self</span>._lvs[output]._FSlist)
+            cuts_list = <span class="k">def</span>aultdict(list)
+
+            x0, x1 = <span class="bp">self</span>._lvs[output].Mamdani_interval_inference()
+
+            <span class="k">for</span> (ant, res) <span class="k">in</span> zip(antecedent, results):
+
+                outname = res[0]
+                outterm = res[1]
+
+                <span class="k">if</span> verbose:
+                    <span class="bp">print</span>(<span class="s2">&quot; ** Rule composition:&quot;</span>, ant, "->&quot;</span>, res, &quot;</span>, output variable: '%s'&quot;</span>% outname,
+                          <span class="s2">&quot;with term: '%s'&quot;</span>% outterm)
+
+                <span class="k">if</span> outname == output:
+
+                    <span class="k">try</span>:
+                        value = ant.evaluate_interval(<span class="bp">self</span>)
+                    <span class="k">except</span> RuntimeError:
+                        <span class="k">raise</span> <span class="bp">Exception</span>("ERROR: one rule could not be evaluated\n"
+                                        + &quot;</span>--- PROBLEMATIC RULE:\n"
+                                        + <span class="s2">&quot;IF &quot;</span>+ str(ant) + &quot;</span>THEN &quot;</span>+ str(res) + "\n&quot;</span>)
+
+                    cuts_list[outterm].append(value)
+
+            values_start = []
+            values_stop = []
+            weightedvalues_start = []
+            weightedvalues_stop = []
+            integration_points = linspace(x0, x1, subdivisions)
+
+            convenience_dict = {}
+            <span class="k">for</span> k <span class="k">in</span> cuts_list.keys():
+                convenience_dict[k] = <span class="bp">self</span>._lvs[output].get_index(k)
+            <span class="k">if</span> verbose: <span class="bp">print</span>(<span class="s2">&quot; * Indices:&quot;</span>, convenience_dict)
+
+            <span class="k">for</span> u <span class="k">in</span> integration_points:
+                comp_values_start = []
+                comp_values_stop = []
+                <span class="k">for</span> k, v_list <span class="k">in</span> cuts_list.items():
+                    <span class="k">for</span> v <span class="k">in</span> v_list:
+                        n = convenience_dict[k]
+                        fs_term = <span class="bp">self</span>._lvs[output]._FSlist[n]
+                        <span class="k">if</span> <span class="bp">self</span>._type_system == 2:
+                            result_start = <span class="bp">float</span>(fs_term.get_value_cut_start(u, cut=v))
+                            result_stop = <span class="bp">float</span>(fs_term.get_value_cut_end(u, cut=v))
+                        <span class="k">else</span>:
+                            result_start = <span class="bp">float</span>(fs_term.get_value_cut(u, cut=v)[0])
+                            result_stop = <span class="bp">float</span>(fs_term.get_value_cut(u, cut=v)[1])
+                        comp_values_start.append(result_start)
+                        comp_values_stop.append(result_stop)
+                keep_start = <span class="bp">max</span>(comp_values_start)
+                keep_stop = <span class="bp">max</span>(comp_values_stop)
+                values_start.append(keep_start)
+                values_stop.append(keep_stop)
+                weightedvalues_start.append(keep_start * u)
+                weightedvalues_stop.append(keep_stop * u)
+            sumwv_start = sum(weightedvalues_start)
+            sumwv_stop = sum(weightedvalues_stop)
+            sumv_start = sum(values_start)
+            sumv_stop = sum(values_stop)
+
+            <span class="k">try</span>:
+                <span class="k">if</span> sumv_start == 0.0:
+                    CoG = (0, sumwv_stop / sumv_stop)
+                    <span class="k">if</span> not ignore_warnings:
+                        <span class="bp">print</span>(
+                            <span class="s2">&quot;WARNING: the sum of rules' firing <span class="k">for</span> variable '%s' <span class="ow">is</span> equal to 0. The result of the Mamdani inference was set to 0.&quot;</span>% output)
+                el<span class="k">if</span> sumv_stop == 0.0:
+                    CoG = (sumwv_start / sumv_start, 0)
+                    <span class="k">if</span> not ignore_warnings:
+                        <span class="bp">print</span>(
+                            <span class="s2">&quot;WARNING: the sum of rules' firing <span class="k">for</span> variable '%s' <span class="ow">is</span> equal to 0. The result of the Mamdani inference was set to 0.&quot;</span>% output)
+                # <span class="k">else</span>:
+                #   CoG = sumwv_start / sumv_start, sumwv_stop / sumv_stop
+                <span class="k">else</span>:
+                    interval_start = sumwv_start / sumv_start
+                    interval_end = sumwv_stop / sumv_stop
+                    <span class="k">if</span> interval_start <= interval_end:
+                        CoG = interval_start, interval_end
+                    <span class="k">else</span>:
+                        CoG = interval_end, interval_start
+
+            <span class="k">except</span> ArithmeticError:
+                <span class="k">if</span> ignore_errors:
+                    <span class="bp">print</span>(
+                        <span class="s2">&quot;WARNING: cannot per<span class="k">for</span>m Mamdani inference <span class="k">for</span> variable '%s'. The variable appears only as antecedent <span class="k">in</span> the rules or an arithmetic error occurred.&quot;</span>% output)
+                <span class="k">else</span>:
+                    <span class="k">raise</span> <span class="bp">Exception</span>(
+                        <span class="s2">&quot;ERROR: cannot per<span class="k">for</span>m Mamdani inference <span class="k">for</span> variable '%s'. The variable appears only as antecedent <span class="k">in</span> the rules or an arithmetic error occurred.&quot;</span>% output)
+
+            <span class="k">if</span> verbose: <span class="bp">print</span>(<span class="s2">&quot; * Weighted values: %.2f\tValues: %.2f\tCoG: %.2f&quot;</span>% (
+                (sumwv_start, sumv_start), (sumwv_stop, sumv_stop), CoG))
+            final_result[output] = CoG
+
+        <span class="k">return</span> final_result
+
+<div class="viewcode-block" id="IntervalFuzzySystem.Sugeno_interval_inference">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_fuzzy_system.IntervalFuzzySystem.Sugeno_interval_inference">[docs]</a>
+    <span class="k">def</span> <span class="fm">Sugeno_interval_inference</span>(<span class="bp">self</span>, terms=<span class="kc">True</span>, ignore_errors=<span class="kc">False</span>, ignore_warnings=<span class="kc">False</span>, verbose=<span class="kc">False</span>):
+<span class="w"></span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Performs Sugeno interval fuzzy inference.</span>
+<span class="sd">           :param terms: names of the variables on which inference must be performed
+                                If empty, all variables appearing in the consequent of a IVFR are inferred.</span>
+<span class="sd">           :type terms: list</span>
+<span class="sd">           :param ignore_errors: toggles the raising of errors during the inference.</span>
+<span class="sd">           :type ignore_errors: bool</span>
+<span class="sd">           :param ignore_warnings: toggles the raising of warnings during the inference.</span>
+<span class="sd">           :type ignore_warnings: bool</span>
+<span class="sd">           :param verbose: toggles verbose mode.</span>
+<span class="sd">           :type verbose: bool</span>
+<span class="sd">           :return: a dictionary, containing as keys the variables names and as values their interval inferred values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span>._sanitize and terms <span class="ow">is</span> not None:
+            terms = [<span class="bp">self</span>._sanitize(term) <span class="k">for</span> term <span class="k">in</span> terms]
+            # <span class="k">def</span>ault: inference on ALL rules/terms
+
+        <span class="k">if</span> terms == None:
+            temp = [rule[1][0] <span class="k">for</span> rule <span class="k">in</span> <span class="bp">self</span>._rules]
+            terms = list(set(temp))
+        <span class="k">else</span>:
+            # get rid of duplicates <span class="k">in</span> terms to infer
+            terms = list(set(terms))
+            <span class="k">for</span> t <span class="k">in</span> terms:
+                <span class="k">if</span> t not <span class="k">in</span> set([rule[1][0] <span class="k">for</span> rule <span class="k">in</span> <span class="bp">self</span>._rules]):
+                    <span class="k">raise</span> <span class="bp">Exception</span>("ERROR: Variable &quot;</span>+ t + &quot;</span>does not appear <span class="k">in</span> any consequent.&quot;</span>)
+
+        array_rules = array(<span class="bp">self</span>._rules, dtype='object')
+        <span class="k">if</span> len(<span class="bp">self</span>._constants) == 0:
+            result = <span class="bp">self</span>.mediate_interval(terms, array_rules.T[0], array_rules.T[1], ignore_errors=ignore_errors,
+                                           ignore_warnings=ignore_warnings, verbose=verbose)
+        <span class="k">else</span>:
+            # remove constant variables from list of variables to infer
+            ncost_terms = [t <span class="k">for</span> t <span class="k">in</span> terms <span class="k">if</span> t not <span class="k">in</span> <span class="bp">self</span>._constants]
+            result = <span class="bp">self</span>.mediate_interval(ncost_terms, array_rules.T[0], array_rules.T[1], ignore_errors=ignore_errors,
+                                           ignore_warnings=ignore_warnings, verbose=verbose)
+            # add values of constant variables
+            cost_terms = [t <span class="k">for</span> t <span class="k">in</span> terms <span class="k">if</span> t <span class="k">in</span> <span class="bp">self</span>._constants]
+            <span class="k">for</span> name <span class="k">in</span> cost_terms:
+                result[name] = <span class="bp">self</span>._variables[name]
+
+        <span class="k">return</span> result
+
+<div class="viewcode-block" id="IntervalFuzzySystem.Mamdani_interval_inference">
+<a class="viewcode-back" href="../../ifis.html#ifis.interval_fuzzy_system.IntervalFuzzySystem.Mamdani_interval_inference">[docs]</a>
+    <span class="k">def</span> <span class="fm">Mamdani_interval_inference</span>(<span class="bp">self</span>, terms=<span class="kc">True</span>, subdivisions=1000, ignore_errors=<span class="kc">False</span>, ignore_warnings=<span class="kc">False</span>,
+                                   verbose=<span class="kc">False</span>):
+<span class="w"></span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Performs Mamdani interval fuzzy inference.</span>
+<span class="sd">           :param terms: names of the variables on which inference must be performed 
+                                If empty, all variables appearing in the consequent of a IVFR are inferred.</span>
+<span class="sd">           :type terms: list</span>
+<span class="sd">           :param subdivisions: the number of integration steps to be performed for calculating fuzzy set area,
+                                defaults to 1000.</span>
+<span class="sd">           :type subdivisions: int</span>
+<span class="sd">           :param ignore_errors: toggles the raising of errors during the inference</span>
+<span class="sd">           :type ignore_errors: bool</span>
+<span class="sd">           :param ignore_warnings: toggles the raising of warnings during the inference</span>
+<span class="sd">           :type ignore_warnings: bool</span>
+<span class="sd">           :param verbose: toggles verbose mode</span>
+<span class="sd">           :type verbose: bool</span>
+<span class="sd">           :return: a dictionary, containing as keys the variables names and as values their interval inferred values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span>._sanitize and terms <span class="ow">is</span> not None:
+            terms = [<span class="bp">self</span>._sanitize(term) <span class="k">for</span> term <span class="k">in</span> terms]
+
+        # <span class="k">def</span>ault: inference on ALL rules/terms
+        <span class="k">if</span> terms == None:
+            temp = [rule[1][0] <span class="k">for</span> rule <span class="k">in</span> <span class="bp">self</span>._rules]
+            terms = list(set(temp))
+        <span class="k">else</span>:
+            # get rid of duplicates <span class="k">in</span> terms to infer
+            terms = list(set(terms))
+            <span class="k">for</span> t <span class="k">in</span> terms:
+                <span class="k">if</span> t not <span class="k">in</span> set([rule[1][0] <span class="k">for</span> rule <span class="k">in</span> <span class="bp">self</span>._rules]):
+                    <span class="k">raise</span> <span class="bp">Exception</span>("ERROR: Variable &quot;</span>+ t + &quot;</span>does not appear <span class="k">in</span> any consequent.&quot;</span>)
+
+        array_rules = array(<span class="bp">self</span>._rules, dtype=object)
+        <span class="k">if</span> len(<span class="bp">self</span>._constants) == 0:
+            result = <span class="bp">self</span>.mediate_interval_Mamdani(terms, array_rules.T[0], array_rules.T[1],
+                                                   ignore_errors=ignore_errors,
+                                                   ignore_warnings=ignore_warnings, verbose=verbose,
+                                                   subdivisions=subdivisions)
+        <span class="k">else</span>:
+            # remove constant variables from list of variables to infer
+            ncost_terms = [t <span class="k">for</span> t <span class="k">in</span> terms <span class="k">if</span> t not <span class="k">in</span> <span class="bp">self</span>._constants]
+            result = <span class="bp">self</span>.mediate_interval_Mamdani(ncost_terms, array_rules.T[0], array_rules.T[1],
+                                                   ignore_errors=ignore_errors,
+                                                   ignore_warnings=ignore_warnings, verbose=verbose,
+                                                   subdivisions=subdivisions)
+            # add values of constant variables
+            cost_terms = [t <span class="k">for</span> t <span class="k">in</span> terms <span class="k">if</span> t <span class="k">in</span> <span class="bp">self</span>._constants]
+            <span class="k">for</span> name <span class="k">in</span> cost_terms:
+                result[name] = <span class="bp">self</span>._variables[name]
+
+        <span class="k">return</span> result
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Piotr Grochowalski, Dawid Kosior, Dorota Gil, Wojciech Kozioł, Barbara Pękala, Krzysztof Dyczkowski, Uzay Kaymak, Caro Fuchs, Marco S. Nobile.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+   
+  <div id="other-versions-div" class="rst-versions" data-toggle="rst-versions" role="note" aria-label="Versions" style="visibility: hidden">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Other Versions</span>
+      
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl id="other-versions-dl"/>
+    </div>
+  </div>
+  <script>
+    function addVersion(name) {
+      var dd = document.createElement("dd");
+      var a = document.createElement("a");
+      a.href = "../../../" + name;
+      a.innerText = name;
+      dd.appendChild(a);
+      document.getElementById('other-versions-dl').appendChild(dd);
+    }
+    // Get versions.txt and add a version for each line
+    fetch("../../../versions.txt").then(response => {
+      if (response.ok) {
+        document.getElementById('other-versions-div').style.visibility = "visible";
+        return response.text().then(text => text.split(/\r?\n/).forEach(addVersion))
+      }
+    });
+  </script>
+
+
+</body>
+</html>
