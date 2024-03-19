@@ -149,7 +149,7 @@ for row in data_array:
     if row[4] != 0:
         new_data_array.append(row)
 
-data_array = new_data_array
+data_array = new_data_array 
 
 filepath0 = "interval_results.txt"
 
