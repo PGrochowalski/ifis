@@ -151,7 +151,7 @@ for row in data_array:
 
 data_array = new_data_array
 
-filepath0 = "interval_results2.txt"
+filepath0 = "interval_results.txt"
 
 f_raw_data = open(filepath0, "a")
 f_raw_data.write("[P40, HW, HHmax, sigma, Pose, result]\n")
