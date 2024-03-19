@@ -87,24 +87,46 @@ def OR(x, y):
 
 def AND(x, y):
     """
-    Definition of basic AND aggregator in rules as Mean aggregation in case intervals and min function when input data are floats
-        :param x: first aggregated value
-        :type x: tuple, float
-        :param y: second aggregated value
-        :type y: tuple, float
-        :return: aggregated value
-        :rtype: tuple, float
+    Definicja podstawowego agregatora AND w regułach jako agregacja średniej w przypadku przedziałów
+    i funkcja min przy danych wejściowych typu float.
     """
-    if type(x) is tuple and type(y) is tuple:
-        # return min(x[0], y[0]), min(x[1], y[1])
-        return (x[0] + y[0]) / 2.0, (x[1] + y[1]) / 2.0
-        # return pow(x[0] * y[0], 0.5), pow(x[1] * y[1], 0.5)
-        # return x[0] * y[0], x[1] * y[1]
-    else:
-        return min(x, y)
-        # return (x + y)/2.0
-        # return pow(x * y, 0.5)
-        # return x * y
+    if isinstance(x, tuple) and isinstance(y, tuple):
+        # Upewnij się, że obie zmienne są krotkami i operuj na każdym końcu przedziału oddzielnie
+        return (min(x[0], y[0]), min(x[1], y[1]))
+    elif isinstance(x, list) and isinstance(y, list):
+        # Jeśli obie zmienne są listami, zamień je na krotki i wykonaj operację
+        return (min(x[0], y[0]), min(x[1], y[1]))
+    elif isinstance(x, list):
+        # Jeśli x jest listą, zamień ją na krotkę
+        x = tuple(x)
+    elif isinstance(y, list):
+        # Jeśli y jest listą, zamień ją na krotkę
+        y = tuple(y)
+
+    # Dla skalarnych wartości, zachowaj oryginalne zachowanie
+    return min(x, y)
+
+
+# def AND(x, y):
+#     """
+#     Definition of basic AND aggregator in rules as Mean aggregation in case intervals and min function when input data are floats
+#         :param x: first aggregated value
+#         :type x: tuple, float
+#         :param y: second aggregated value
+#         :type y: tuple, float
+#         :return: aggregated value
+#         :rtype: tuple, float
+#     """
+#     if type(x) is tuple and type(y) is tuple:
+#         # return min(x[0], y[0]), min(x[1], y[1])
+#         return (x[0] + y[0]) / 2.0, (x[1] + y[1]) / 2.0
+#         # return pow(x[0] * y[0], 0.5), pow(x[1] * y[1], 0.5)
+#         # return x[0] * y[0], x[1] * y[1]
+#     else:
+#         return min(x, y)
+#         # return (x + y)/2.0
+#         # return pow(x * y, 0.5)
+#         # return x * y
 
 
 def AND_p(x, y):

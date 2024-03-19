@@ -1,5 +1,6 @@
 import csv
 import pickle as pk
+import pandas as pd
 from _warnings import warn
 import random
 
@@ -17,7 +18,8 @@ class ImportData:
 
         attributes = []
         features_in = open(data_file_name, 'rb')
-        features = pk.load(features_in)
+        features = pd.read_pickle(features_in)
+        # features = pk.load(features_in) # for pandas 1.5.3 or lower
         del features_in
         raw_data = {}
         first_key = list(features.keys())[0]

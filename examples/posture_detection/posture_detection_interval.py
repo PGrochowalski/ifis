@@ -13,42 +13,42 @@ data_dict3 = ImportData.read_raw_data_pickle_file("data/classes.pickle", False, 
 
 data_array = ImportData.convert_data_dict2table(data_dict2[1], data_dict1[1], data_dict3[1])
 
-FS = IntervalFuzzySystem()
+FS = IntervalFuzzySystem(type_system=2)
 
-F_HW_low = IntervalFuzzySet(function_start=fz.fun_HW_low_start, function_end=fz.fun_HW_low_end, term="low")
-F_HW_med = IntervalFuzzySet(function_start=fz.fun_HW_med_start, function_end=fz.fun_HW_med_end, term="medium")
-F_HW_high = IntervalFuzzySet(function_start=fz.fun_HW_high_start, function_end=fz.fun_HW_high_end, term="high")
+F_HW_low = IntervalFuzzySet(function_start=fz.fun_HW_low, term="low")
+F_HW_med = IntervalFuzzySet(function_start=fz.fun_HW_med, term="medium")
+F_HW_high = IntervalFuzzySet(function_start=fz.fun_HW_high, term="high")
 lv_in1 = IntervalLinguisticVariable([F_HW_low, F_HW_med, F_HW_high], concept="HW", universe_of_discourse=[0, 4])
 lv_in1.plot()
 FS.add_linguistic_variable("HW", lv_in1)
 
-F_HHmax_low = IntervalFuzzySet(function_start=fz.fun_HHmax_low_start, function_end=fz.fun_HHmax_low_end, term="low")
-F_HHmax_med = IntervalFuzzySet(function_start=fz.fun_HHmax_med_start, function_end=fz.fun_HHmax_med_end, term="medium")
-F_HHmax_high = IntervalFuzzySet(function_start=fz.fun_HHmax_high_start, function_end=fz.fun_HW_high_end, term="high")
+F_HHmax_low = IntervalFuzzySet(function_start=fz.fun_HHmax_low, term="low")
+F_HHmax_med = IntervalFuzzySet(function_start=fz.fun_HHmax_med, term="medium")
+F_HHmax_high = IntervalFuzzySet(function_start=fz.fun_HHmax_high, term="high")
 lv_in2 = IntervalLinguisticVariable([F_HHmax_low, F_HHmax_med, F_HHmax_high], concept="HHmax",
                                     universe_of_discourse=[0, 1.5])
 lv_in2.plot()
 FS.add_linguistic_variable("HHmax", lv_in2)
 
-F_sigma_low = IntervalFuzzySet(function_start=fz.fun_sigma_low_start, function_end=fz.fun_sigma_low_end, term="low")
-F_sigma_med = IntervalFuzzySet(function_start=fz.fun_sigma_med_start, function_end=fz.fun_sigma_med_end, term="medium")
-F_sigma_high = IntervalFuzzySet(function_start=fz.fun_sigma_high_start, function_end=fz.fun_sigma_high_end, term="high")
+F_sigma_low = IntervalFuzzySet(function_start=fz.fun_sigma_low, term="low")
+F_sigma_med = IntervalFuzzySet(function_start=fz.fun_sigma_med, term="medium")
+F_sigma_high = IntervalFuzzySet(function_start=fz.fun_sigma_high, term="high")
 lv_in3 = IntervalLinguisticVariable([F_sigma_low, F_sigma_med, F_sigma_high], concept="sigma",
                                     universe_of_discourse=[0, 700])
 lv_in3.plot()
 FS.add_linguistic_variable("sigma", lv_in3)
 
-F_P40_low = IntervalFuzzySet(function_start=fz.fun_P40_low_start, function_end=fz.fun_P40_low_end, term="low")
-F_P40_med = IntervalFuzzySet(function_start=fz.fun_P40_med_start, function_end=fz.fun_P40_med_end, term="medium")
-F_P40_high = IntervalFuzzySet(function_start=fz.fun_P40_high_start, function_end=fz.fun_P40_high_end, term="high")
+F_P40_low = IntervalFuzzySet(function_start=fz.fun_P40_low, term="low")
+F_P40_med = IntervalFuzzySet(function_start=fz.fun_P40_med, term="medium")
+F_P40_high = IntervalFuzzySet(function_start=fz.fun_P40_high, term="high")
 lv_in4 = IntervalLinguisticVariable([F_P40_low, F_P40_med, F_P40_high], concept="P40",
                                     universe_of_discourse=[0, 1])
 lv_in4.plot()
 FS.add_linguistic_variable("P40", lv_in4)
 
-F_pose_isLy = IntervalFuzzySet(function_start=fz.fun_Pose_isLy_start, function_end=fz.fun_Pose_isLy_end, term="isLy")
-F_pose_mayLy = IntervalFuzzySet(function_start=fz.fun_Pose_mayLy_start, function_end=fz.fun_Pose_mayLy_end, term="mayLy")
-F_pose_notLy = IntervalFuzzySet(function_start=fz.fun_Pose_notLy_start, function_end=fz.fun_Pose_notLy_end, term="notLy")
+F_pose_isLy = IntervalFuzzySet(function_start=fz.fun_Pose_isLy, term="isLy")
+F_pose_mayLy = IntervalFuzzySet(function_start=fz.fun_Pose_mayLy, term="mayLy")
+F_pose_notLy = IntervalFuzzySet(function_start=fz.fun_Pose_notLy, term="notLy")
 lv_out1 = IntervalLinguisticVariable([F_pose_isLy, F_pose_mayLy, F_pose_notLy], concept="pose",
                                      universe_of_discourse=[0, 1])
 lv_out1.plot()
@@ -151,7 +151,7 @@ for row in data_array:
 
 data_array = new_data_array
 
-filepath0 = "interval_results.txt"
+filepath0 = "interval_results2.txt"
 
 f_raw_data = open(filepath0, "a")
 f_raw_data.write("[P40, HW, HHmax, sigma, Pose, result]\n")
@@ -163,10 +163,10 @@ TP, TN, FN, FP = 0, 0, 0, 0
 for row in data_array:
     # print(i)
     i += 1
-    FS.set_variable("P40", row[0])
-    FS.set_variable("HHmax", row[1])
-    FS.set_variable("sigma", row[2])
-    FS.set_variable("HW", row[3])
+    FS.set_variable("P40", (row[0], row[0]))
+    FS.set_variable("HHmax", (row[1], row[1]))
+    FS.set_variable("sigma", (row[2], row[2]))
+    FS.set_variable("HW", (row[3], row[3]))
     result = FS.Mamdani_interval_inference(["pose"])
     # Correctly for interval, when start = end
     if result['pose'][0] >= 0.5:
