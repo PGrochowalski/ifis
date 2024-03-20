@@ -3,7 +3,7 @@ from ifis.interval_fuzzy_system import *
 from ifis.interval_linguistic_variable import *
 
 import fuzzyfication as fz
-from examples.posture_detection.import_data import *
+from import_data import *
 
 # reading data
 data_dict1 = ImportData.read_raw_data_pickle_file("data/features2D.pickle", False, 'HeightWidthRatio')
