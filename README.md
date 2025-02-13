@@ -58,7 +58,7 @@ Listing 1 illustrates a range inference system whose task is to determine the va
 
 An example implementation of an inference system based on the Takagi–Sugeno method:
 
-```
+``` python
 from simpful import *
 from ifis.interval_fuzzy_sets import *
 from ifis.interval_fuzzy_system import *
